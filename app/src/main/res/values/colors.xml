@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="actionsheet_gray">#999999</color>
+    <color name="actionsheet_blue">#037BFF</color>
+    <color name="color_333333">#333333</color>
+    <color name="color_666666">#666666</color>
+    <color name="color_999999">#999999</color>
+
+    <color name="white">#ffffff</color>
+    <color name="white_80">#80ffffff</color>
+    <color name="back">#000000</color>
+    <color name="black_80">#80000000</color>
+    <color name="black_70">#B3000000</color>
+    <color name="black69_80">#E6696969</color>
+    <color name="black78_80">#E6787878</color>
+    <color name="black_10">#1A000000</color>
+    <color name="black_15">#26000000</color>
+    <color name="black_20">#33000000</color>
+    <color name="black_40">#66000000</color>
+    <color name="black_30">#B3000000</color>
+    <color name="gray_30">#B3cccccc</color>
+    <color name="themeColor">#2196f3</color>
+    <color name="themeTextColor">#ffffff</color>
+
+    <color name="tansplate">#00000000</color>
+    <color name="color_f0f0f0">#f0f0f0</color>
+    <color name="color_1FA7DC">#1FA7DC</color>
+    <color name="color_F1F1F1">#F1F1F1</color>
+    <color name="color_F3F3F3">#F3F3F3</color>
+    <color name="color_e5e5e5">#e5e5e5</color>
+    <color name="color_f6f6f6">#f6f6f6</color>
+    <color name="color_cccccc">#cccccc</color>
+    <color name="color_3DC043">#3DC043</color>
+    <color name="color_b00000">#b00000</color>
+    <color name="color_e4e4e4">#E4E4E4</color>
+    <color name="color_EBEBEB">#EBEBEB</color>
+    <color name="color_F6F6F6">#F6F6F6</color>
+    <color name="color_858585">#858585</color>
+    <color name="color_006ba3">#006ba3</color>
+    <color name="black_4d">#4d4d4d</color>
+    <color name="color_777777">#777777</color>
+    //文本字体颜色
+    <color name="color_ff0000">#ff0000</color>
+    <color name="color_ff9000">#ff9000</color>
+    <color name="color_29c683">#29c683</color>
+    <color name="color_258cff">#258cff</color>
+    <color name="color_ff32c8">#ff32c8</color>
+
+    <color name="toast_bg">#dddfe0</color>
+    <color name="notification_bak">#47fafafa</color>
+    //登陆界面分割线色值
+    <color name="color_5cc2e9">#5cc2e9</color>
+    //1.0版本主色
+    <color name="color_20b18b">#20b18b</color>
+    <color name="color_74D3B0">#74D3B0</color>
+    <color name="color_2AA986">#2AA986</color>
+    <color name="color_0e8910">#0e9010</color>
+    <color name="color_47ab49">#47ab49</color>
+    <color name="color_F9F9F9">#F9F9F9</color>
+    //底线直线色
+    <color name="color_dcdcdc">#dcdcdc</color>
+    <color name="color_e7e7e7">#e7e7e7</color>
+    <color name="color_0f669f">#0f669f</color>
+    <color name="red">#ff5654</color>
+    <color name="transparent_red">#ddff5654</color>
+    //登录页分割线色
+    <color name="color_60e4be">#60e4be</color>
+    //版本更新弹窗背景色
+    <color name="color_eefaff">#eefaff</color>
+    <color name="black_bg">#d0000000</color>
+
+    <color name="color_FEFEFE">#FEFEFE</color>
+    <color name="color_0B0B0B">#0B0B0B</color>
+    <!-- 大众版常用色值 -->
+    <color name="color_support">#19D777</color>//辅助色
+    <color name="color_selected_tags">#FF7A05</color>//选中状态文字、标签内文字
+    <color name="color_selected_border">#FF6B08</color>//边框颜色
+    <color name="color_warning_price">#F21C1C</color>//警告性文字 价格金额
+    <color name="color_maintext_title">#1B1B1B</color>//正文文本、标题文字
+    <color name="color_subtext_subtitle">#4C4C4C</color>//辅助文字、次级标题
+    <color name="color_most_shallow">#CCCCCC</color>//最浅文本色值
+    <color name="color_most_shallow_background">#F9F9F9</color>//最浅色值 底色
+    <color name="color_0b0b0b">#0B0B0B</color>//设置选项文字颜色
+    <color name="color_f9f9f9">#F9F9F9</color>
+    <color name="color_262626">#262626</color>
+    <color name="color_yellow">#FFFF00</color>
+    <color name="color_blue">#0000FF</color>
+    <color name="color_red">#FF0000</color>
+    <color name="color_green">#32bd00</color>
+    <color name="color_forfree">#01D777</color>
+    <color name="color_1d1d1d">#1D1D1D</color>
+
+</resources>
