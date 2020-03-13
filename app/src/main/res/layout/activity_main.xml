@@ -4,31 +4,56 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.MainActivity"
     android:orientation="vertical"
-    >
+    tools:context=".activity.MainActivity">
 
-    <EditText
-        android:id="@+id/et_word"
+    <include layout="@layout/common_titlebar"/>
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btn_translate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="搜索"
-        android:layout_marginTop="10dp"
-        />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_result"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:textSize="20sp"
-        android:textColor="@color/colorPrimary"
-        />
+            <EditText
+                android:id="@+id/et_word"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="输入想看的动漫名称，如海贼王~。~"
+                android:textSize="16sp"
+                android:drawableStart="@mipmap/ic_search"
+                android:drawablePadding="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:textColor="@color/color_maintext_title"
+                />
 
+            <Button
+                android:id="@+id/btn_translate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="爬取视频数据"
+                android:background="@drawable/bg_orange_round_all_8"
+                android:textColor="@color/white"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                />
+
+            <TextView
+                android:id="@+id/tv_result"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"
+                android:visibility="gone"
+                />
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

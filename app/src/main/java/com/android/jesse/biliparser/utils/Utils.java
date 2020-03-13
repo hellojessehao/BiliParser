@@ -1,5 +1,7 @@
 package com.android.jesse.biliparser.utils;
 
+import android.app.Activity;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -20,6 +22,20 @@ public class Utils {
             e.printStackTrace();
         }
         return "";
+    }
+
+    /**
+     * 设置沉浸式状态栏
+     */
+    public static void setDeepStatusBar(Activity activity) {
+        ScreenManager.getInstance().setStatusBar(true, activity);
+    }
+
+    /**
+     * 设置沉浸式状态栏，状态栏字体为黑色
+     */
+    public static void setDarkStatusBar(Activity activity) {
+        ScreenManager.getInstance().setDeepStatusBar(true, activity);
     }
 
 }

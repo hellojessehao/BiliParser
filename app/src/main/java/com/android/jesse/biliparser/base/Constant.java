@@ -35,5 +35,6 @@ public class Constant {
     //@{String常量
     public static final String HEADER_KEY = "url_type";
     public static final String URL_TYPE_SEARCH = "search";
+    public static final String INTENT_KEY_SEARCH_RESULT = "intent_key_search_result";
     //@}
 }

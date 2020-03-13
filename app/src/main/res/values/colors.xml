@@ -93,5 +93,15 @@
     <color name="color_green">#32bd00</color>
     <color name="color_forfree">#01D777</color>
     <color name="color_1d1d1d">#1D1D1D</color>
+    //眼睛保护色
+    <color name="protect_eyes_green">#C7EDCC</color>
+    <color name="protect_yellow">#FAF9DE</color>
+    <color name="protect_hese">#FFF2E2</color>
+    <color name="protect_red">#FDE6E0</color>
+    <color name="protect_grass_green">#E3EDCD</color>
+    <color name="protect_blue">#DCE2F1</color>
+    <color name="protect_purple">#E9EBFE</color>
+    <color name="protect_gray">#EAEAEF</color>
 
+    <color name="color_back_green">#5CE19D</color>
 </resources>
