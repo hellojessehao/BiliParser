@@ -8,6 +8,7 @@ package com.android.jesse.biliparser.network.model.bean;
 public class SearchResultVideoBean {
 
     private String url;
+    private String cover;//封面
     private String title;
     private String playCount;//播放量
     private String date;
@@ -19,6 +20,14 @@ public class SearchResultVideoBean {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 
     public String getTitle() {
@@ -57,6 +66,7 @@ public class SearchResultVideoBean {
     public String toString() {
         return "SearchResultVideoBean{" +
                 "url='" + url + '\'' +
+                ", cover='" + cover + '\'' +
                 ", title='" + title + '\'' +
                 ", playCount='" + playCount + '\'' +
                 ", date='" + date + '\'' +

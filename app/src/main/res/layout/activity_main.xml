@@ -11,11 +11,13 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:orientation="vertical">
 
@@ -37,7 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="爬取视频数据"
+                android:text="搜索"
                 android:background="@drawable/bg_orange_round_all_8"
                 android:textColor="@color/white"
                 android:layout_marginStart="10dp"
@@ -46,14 +48,13 @@
 
             <TextView
                 android:id="@+id/tv_result"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:textColor="@color/colorPrimary"
                 android:textSize="20sp"
-                android:visibility="gone"
+                android:visibility="visible"
                 />
-
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

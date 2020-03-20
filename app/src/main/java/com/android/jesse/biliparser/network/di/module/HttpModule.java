@@ -13,6 +13,8 @@ import com.google.gson.GsonBuilder;
 import com.ihsanbal.logging.Level;
 import com.ihsanbal.logging.LoggingInterceptor;
 
+import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -58,7 +60,7 @@ public class HttpModule {
     @Provides
     @MainUrl
     Retrofit provideZhihuRetrofit(Retrofit.Builder builder, OkHttpClient client) {
-        return createRetrofit(builder, client, Constant.BILI_SEARCH_URL);
+        return createRetrofit(builder, client, Constant.SAKURA_SEARCH_URL);
     }
 
     Interceptor headerInterceptor =new Interceptor() {
@@ -80,7 +82,7 @@ public class HttpModule {
                 String headerValue = headerValues.get(0);
                 HttpUrl newBaseUrl = null;
                 if (Constant.URL_TYPE_SEARCH.equals(headerValue)) {
-                    newBaseUrl = HttpUrl.parse(Constant.BILI_SEARCH_URL);
+                    newBaseUrl = HttpUrl.parse(Constant.SAKURA_SEARCH_URL);
                 }else{
                     newBaseUrl = oldHttpUrl;
                 }
@@ -171,6 +173,7 @@ public class HttpModule {
 //        }
 //        设置统一的请求头部参数
 //        builder.addInterceptor(apikey);
+        builder.hostnameVerifier(new AllowAllHostnameVerifier());
         //设置缓存
         builder.addNetworkInterceptor(cacheInterceptor);
         builder.addInterceptor(cacheInterceptor);

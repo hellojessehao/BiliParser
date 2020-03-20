@@ -15,7 +15,7 @@ public class Utils {
 
     private static final String TAG = Utils.class.getSimpleName();
 
-    public static String translateChinese2Utf8(String chineseWord){
+    public static String translateChinese2Utf8(String chineseWord) {
         try {
             return URLEncoder.encode(chineseWord, "UTF-8");
         } catch (UnsupportedEncodingException e) {

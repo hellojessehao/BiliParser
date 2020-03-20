@@ -13,6 +13,7 @@ public class Constant {
 
     //@{url
     public static final String BILI_SEARCH_URL = "https://search.bilibili.com/";//后面拼接上想要搜索的内容 https://search.bilibili.com/all?keyword=
+    public static final String SAKURA_SEARCH_URL = "http://www.imomoe.in/";//樱花动漫搜索链接
     //@}
 
     //@{paths
@@ -36,5 +37,6 @@ public class Constant {
     public static final String HEADER_KEY = "url_type";
     public static final String URL_TYPE_SEARCH = "search";
     public static final String INTENT_KEY_SEARCH_RESULT = "intent_key_search_result";
+    public static final String KEY_DOCUMENT = "KEY_DOCUMENT";
     //@}
 }

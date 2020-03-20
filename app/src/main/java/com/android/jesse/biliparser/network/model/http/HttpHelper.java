@@ -15,6 +15,6 @@ import retrofit2.http.Query;
 
 public interface HttpHelper {
 
-    Flowable<ResponseBody> searchAnims(@Query("keyword") String keyword);//根据keyword查询动漫
+    Flowable<ResponseBody> searchAnims(@Query("searchword") String keyword);//根据keyword查询动漫
 
 }
