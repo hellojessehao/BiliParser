@@ -74,6 +74,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'me.yokeyword:fragmentation:1.3.3'
     implementation 'com.orhanobut:logger:2.1.1'
-    //爬虫
-
+    //@{饺子播放器
+    implementation 'cn.jzvd:jiaozivideoplayer:6.2.10'
+    //@}
 }

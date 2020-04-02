@@ -18,6 +18,8 @@ import com.android.jesse.biliparser.network.di.component.DaggerAppComponent;
 import com.android.jesse.biliparser.network.di.module.AppModule;
 import com.android.jesse.biliparser.network.di.module.HttpModule;
 import com.android.jesse.biliparser.utils.CrashHandler;
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -59,6 +61,8 @@ public class App extends Application implements Application.ActivityLifecycleCal
         //初始化崩溃监听器，崩溃日志将存于 mnt/sdcard/crash 目录下
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init(this);
+        //初始化Logger
+        Logger.addLogAdapter(new AndroidLogAdapter());
 
         registerActivityLifecycleCallbacks(this);//注册APP生命周期监听
     }

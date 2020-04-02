@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:background="@color/white"
+    android:padding="5dp"
+    android:layout_marginStart="15dp"
+    android:layout_marginEnd="15dp"
+    android:layout_gravity="top">
+
+    <com.android.jesse.biliparser.components.ImageViewRoundRect
+        android:id="@+id/iv_cover"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:src="@mipmap/emptyalbum"
+        android:scaleType="fitXY"
+        app:roundRadius="8"
+        app:type="1"
+        />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="7"
+        android:layout_marginStart="10dp"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_maintext_title"
+            android:textSize="16sp"
+            android:text=""
+            android:ellipsize="end"
+            android:maxLines="1"
+            />
+
+        <TextView
+            android:id="@+id/tv_alias"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_subtext_subtitle"
+            android:textSize="14sp"
+            android:text=""
+            android:layout_marginTop="5dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            />
+
+        <TextView
+            android:id="@+id/tv_infos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text=""
+            android:textSize="14sp"
+            android:textColor="@color/color_subtext_subtitle"
+            android:ellipsize="end"
+            android:maxLines="1"
+            />
+
+        <TextView
+            android:id="@+id/tv_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text=""
+            android:textSize="14sp"
+            android:textColor="@color/color_most_shallow"
+            android:maxLines="3"
+            android:ellipsize="end"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

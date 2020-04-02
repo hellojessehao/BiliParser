@@ -155,7 +155,7 @@ public class HttpModule {
                 Request request = chain.request()
                         .newBuilder()
                         .removeHeader("User-Agent")//移除旧的
-                        .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36")//添加真正的头部
+                        .addHeader("User-Agent", Constant.USER_AGENT_FORPC)//添加真正的头部
                         .build();
                 return chain.proceed(request);
             }

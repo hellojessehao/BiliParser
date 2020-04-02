@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/common_titlebar"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:fillViewport="true"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/rl_header"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_margin="10dp">
+
+                <com.android.jesse.biliparser.components.ImageViewRoundRect
+                    android:id="@+id/iv_cover"
+                    android:layout_width="120dp"
+                    android:layout_height="150dp"
+                    android:src="@mipmap/emptyalbum"
+                    android:scaleType="fitXY"
+                    app:roundRadius="8"
+                    app:type="1"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_alias"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/iv_cover"
+                    android:layout_marginStart="10dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textSize="16sp"
+                    android:textColor="@color/color_maintext_title"
+                    android:text=""
+                    />
+
+                <TextView
+                    android:id="@+id/tv_area"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/iv_cover"
+                    android:layout_below="@id/tv_alias"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/color_subtext_subtitle"
+                    android:text=""
+                    />
+
+                <TextView
+                    android:id="@+id/tv_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/tv_area"
+                    android:layout_alignParentEnd="true"
+                    android:textSize="14sp"
+                    android:textColor="@color/color_subtext_subtitle"
+                    android:text=""
+                    android:maxEms="8"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/iv_cover"
+                    android:layout_below="@id/tv_area"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/color_subtext_subtitle"
+                    android:text=""
+                    />
+
+                <TextView
+                    android:id="@+id/tv_tags"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/tv_time"
+                    android:layout_alignParentEnd="true"
+                    android:textSize="14sp"
+                    android:textColor="@color/color_subtext_subtitle"
+                    android:text=""
+                    android:maxEms="8"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_indexes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/iv_cover"
+                    android:layout_below="@id/tv_time"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/color_subtext_subtitle"
+                    android:text=""
+                    />
+
+                <TextView
+                    android:id="@+id/tv_update_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/iv_cover"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="10dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textSize="14sp"
+                    android:textColor="@color/color_subtext_subtitle"
+                    android:text=""
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_waiting_live"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:nestedScrollingEnabled="false"
+                    android:padding="10dp"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_no_data"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="14.5dp"
+                    android:drawableTop="@mipmap/ic_no_search_result"
+                    android:drawablePadding="9dp"
+                    android:gravity="center"
+                    android:text="啊噢~没有找到任何内容~"
+                    android:textColor="@color/color_selected_tags"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

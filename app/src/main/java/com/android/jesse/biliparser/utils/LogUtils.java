@@ -2,6 +2,8 @@ package com.android.jesse.biliparser.utils;
 
 import android.util.Log;
 
+import com.orhanobut.logger.Logger;
+
 /**
  * @Description: 日志打印类
  * @author: zhangshihao
@@ -12,19 +14,19 @@ public class LogUtils {
     private static final String TAG = "zsh";
 
     public static void d(String msg){
-        Log.d(TAG,msg);
+        Logger.d(TAG+" "+msg);
     }
 
     public static void i(String msg){
-        Log.i(TAG,msg);
+        Logger.i(TAG+" "+msg);
     }
 
     public static void e(String msg){
-        Log.e(TAG,msg);
+        Logger.e(TAG+" "+msg);
     }
 
     public static void v(String msg){
-        Log.v(TAG,msg);
+        Logger.v(TAG+" "+msg);
     }
 
 }

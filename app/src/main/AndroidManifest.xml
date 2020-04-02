@@ -28,6 +28,11 @@
         <activity android:name=".activity.SearchResultDisplayActivity"
             android:screenOrientation="portrait"
             />
+        <activity android:name=".activity.ChooseSectionActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".activity.BaseWebActivity" />
+        <activity android:name=".activity.VideoPlayActivity" />
     </application>
 
 </manifest>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ImageViewRoundRect -->
+    <declare-styleable name="ImageViewRoundRect">
+        <attr name="roundRadius" format="integer" />
+        <attr name="type" format="integer" />
+    </declare-styleable>
+
+</resources>

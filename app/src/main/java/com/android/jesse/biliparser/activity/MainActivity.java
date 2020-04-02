@@ -8,11 +8,13 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -118,12 +120,13 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                     public void run() {
                         try{
                             Connection connection = Jsoup.connect("http://www.imomoe.in/search.asp");
-                            connection.userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36");
-                            connection.data("searchword","鬼灭之刃");
+                            connection.userAgent(Constant.USER_AGENT_FORPC);
+                            connection.data("searchword",word);
                             connection.postDataCharset("GB2312");//关键中的关键！！
                             Document document = connection.method(Connection.Method.POST).post();
                             LogUtils.d(TAG+" html = \n"+document.outerHtml());
                             mHandler.sendMessage(Message.obtain(mHandler, 0, document));
+                            //TODO:增加请求失败的处理
                         }catch (IOException ioe){
                             ioe.printStackTrace();
                         }

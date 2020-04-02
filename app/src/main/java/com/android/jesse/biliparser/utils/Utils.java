@@ -5,6 +5,7 @@ import android.app.Activity;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.List;
 
 /**
  * @Description: 通用工具类
@@ -36,6 +37,14 @@ public class Utils {
      */
     public static void setDarkStatusBar(Activity activity) {
         ScreenManager.getInstance().setDeepStatusBar(true, activity);
+    }
+
+    //判断列表是否为空
+    public static boolean isListEmpty(List list) {
+        if (list != null && list.size() > 0) {
+            return false;
+        }
+        return true;
     }
 
 }

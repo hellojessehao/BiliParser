@@ -38,5 +38,9 @@ public class Constant {
     public static final String URL_TYPE_SEARCH = "search";
     public static final String INTENT_KEY_SEARCH_RESULT = "intent_key_search_result";
     public static final String KEY_DOCUMENT = "KEY_DOCUMENT";
+    public static final String KEY_TITLE = "key_title";
+    public static final String KEY_URL = "key_url";
+    public static final String KEY_NEED_WAIT_PARSE = "key_need_wait_parse";
+    public static final String USER_AGENT_FORPC = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36";
     //@}
 }
