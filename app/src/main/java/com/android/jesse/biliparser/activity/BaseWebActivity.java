@@ -65,6 +65,8 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
     protected ImageView iv_back;
     @BindView(R.id.base_content_view)
     protected FrameLayout contentView;
+    @BindView(R.id.tv_debug)
+    TextView tv_debug;
 
     protected String title;
     protected String url;
@@ -80,6 +82,9 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
             if(msg.what == 0){
                 removeADs((Document)msg.obj);
                 waitDialog.dismiss();
+            }else if(msg.what == 1){
+                mWebView.setVisibility(View.GONE);
+                tv_debug.setText((String)msg.obj);
             }
         }
     };
@@ -175,13 +180,10 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
             if(isFinishing()){
                 return;
             }
-            Log.i(TAG, "onPageFinished() title=" + title);
-            LogUtils.d(TAG+" oriHtml : ");
-            mWebView.loadUrl("javascript:window.customScript.getHtml('<head>'+" +
-                    "document.getElementsByTagName('html')[0].innerHTML+'</head>');");
             try{
                 AssetManager assetManager = getAssets();
-                InputStream inputStream = assetManager.open("parser/removeAds.js");
+                InputStream inputStream = assetManager.open("parser/pureVideo.js");
+//                InputStream inputStream = assetManager.open("parser/removeAds.js");
                 StringBuilder stringBuilder = new StringBuilder();
                 int len = 0;
                 byte[] buf = new byte[4096];
@@ -195,21 +197,12 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
             }catch (IOException ioe){
                 ioe.printStackTrace();
             }
-            LogUtils.d(TAG+" noAdsHtml : ");
-            mWebView.loadUrl("javascript:window.customScript.getHtml('<head>'+" +
-                    "document.getElementsByTagName('html')[0].innerHTML+'</head>');");
             if (TextUtils.isEmpty(title)) {
                 String title = webView.getTitle();
                 if (!TextUtils.isEmpty(title)) {
                     tv_title.setText(title);
                 }
             }
-        }
-
-        @Override
-        public void onPageCommitVisible(WebView view, String url) {
-            super.onPageCommitVisible(view, url);
-            LogUtils.d(TAG+" onPageCommitVisible : url : "+url);
         }
     };
 
@@ -316,6 +309,7 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
         @JavascriptInterface
         public void getHtml(String html){
             LogUtils.d(TAG+" html : \n"+html);
+//            mHandler.sendMessage(Message.obtain(mHandler,1,html));
 //            Document document = Jsoup.parse(html);
 //            Elements divs = document.select("div");
 //            for(int i=0;i<divs.size();i++){

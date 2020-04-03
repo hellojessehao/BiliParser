@@ -1,35 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <include layout="@layout/common_titlebar"/>
+    <include layout="@layout/common_titlebar" />
 
     <ProgressBar
         android:id="@+id/base_web_progress_bar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:visibility="gone"
         android:layout_height="3dp"
-        android:progressDrawable="@drawable/web_progress" />
+        android:progressDrawable="@drawable/web_progress"
+        android:visibility="gone" />
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        >
 
-        <WebView
-            android:id="@+id/base_web_webview"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
 
-        <FrameLayout
-            android:id="@+id/base_content_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            ></FrameLayout>
+            <WebView
+                android:id="@+id/base_web_webview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/tv_debug"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/color_subtext_subtitle"
+                android:lineSpacingMultiplier="1.5"
+                android:textIsSelectable="true"
+                android:selectAllOnFocus="true"
+                />
 
+            <FrameLayout
+                android:id="@+id/base_content_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"></FrameLayout>
+
+        </RelativeLayout>
+    </ScrollView>
 </LinearLayout>
