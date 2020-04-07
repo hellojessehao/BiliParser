@@ -14,38 +14,48 @@
         android:progressDrawable="@drawable/web_progress"
         android:visibility="gone" />
 
-    <ScrollView
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        >
+        android:layout_height="match_parent">
 
-        <RelativeLayout
+        <WebView
+            android:id="@+id/base_web_webview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:visibility="visible" />
 
-            <WebView
-                android:id="@+id/base_web_webview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/tv_no_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="14.5dp"
+            android:drawableTop="@mipmap/ic_touxiang"
+            android:drawablePadding="9dp"
+            android:gravity="center"
+            android:text="@string/net_load_failed"
+            android:textColor="@color/color_selected_tags"
+            android:textSize="12sp"
+            android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/tv_debug"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textColor="@color/color_subtext_subtitle"
-                android:lineSpacingMultiplier="1.5"
-                android:textIsSelectable="true"
-                android:selectAllOnFocus="true"
-                />
+        <TextView
+            android:id="@+id/tv_debug"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingMultiplier="1.5"
+            android:selectAllOnFocus="true"
+            android:textColor="@color/color_subtext_subtitle"
+            android:textIsSelectable="true"
+            android:textSize="16sp"
+            android:visibility="gone"
+            />
 
-            <FrameLayout
-                android:id="@+id/base_content_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"></FrameLayout>
+        <FrameLayout
+            android:id="@+id/base_content_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"></FrameLayout>
 
-        </RelativeLayout>
-    </ScrollView>
+    </RelativeLayout>
 </LinearLayout>

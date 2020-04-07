@@ -31,7 +31,10 @@
         <activity android:name=".activity.ChooseSectionActivity"
             android:screenOrientation="portrait"
             />
-        <activity android:name=".activity.BaseWebActivity" />
+        <activity android:name=".activity.BaseWebActivity"
+            android:hardwareAccelerated ="true"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            />
         <activity android:name=".activity.VideoPlayActivity" />
     </application>
 

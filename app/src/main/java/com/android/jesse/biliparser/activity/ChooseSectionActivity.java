@@ -17,8 +17,10 @@ import com.android.jesse.biliparser.components.WaitDialog;
 import com.android.jesse.biliparser.network.base.SimpleActivity;
 import com.android.jesse.biliparser.network.component.OffsetRecyclerDivider;
 import com.android.jesse.biliparser.network.model.bean.SectionBean;
+import com.android.jesse.biliparser.network.util.ToastUtil;
 import com.android.jesse.biliparser.utils.GlideUtil;
-import com.blankj.utilcode.util.LogUtils;
+import com.android.jesse.biliparser.utils.LogUtils;
+import com.android.jesse.biliparser.utils.NetLoadListener;
 import com.blankj.utilcode.util.SizeUtils;
 
 import org.json.JSONObject;
@@ -74,7 +76,15 @@ public class ChooseSectionActivity extends SimpleActivity {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            NetLoadListener.getInstance().stopListening();
             parseDocument((Document) msg.obj);
+        }
+    };
+    private NetLoadListener.Callback callback = new NetLoadListener.Callback() {
+        @Override
+        public void onNetLoadFailed() {
+            waitDialog.dismiss();
+            ToastUtil.shortShow(R.string.net_load_failed);
         }
     };
 
@@ -124,6 +134,7 @@ public class ChooseSectionActivity extends SimpleActivity {
             @Override
             public void run() {
                 try{
+                    NetLoadListener.getInstance().startListening(callback);
                     Connection connection = Jsoup.connect(url);
                     connection.userAgent(Constant.USER_AGENT_FORPC);
 //                    connection.data("searchword",word);
@@ -131,9 +142,10 @@ public class ChooseSectionActivity extends SimpleActivity {
                     Document document = connection.method(Connection.Method.GET).get();
                     LogUtils.d(TAG+" html = \n"+document.outerHtml());
                     mHandler.sendMessage(Message.obtain(mHandler, 0, document));
-                    //TODO:增加请求失败的处理
                 }catch (IOException ioe){
                     ioe.printStackTrace();
+                    waitDialog.dismiss();
+                    NetLoadListener.getInstance().stopListening();
                 }
             }
         }).start();

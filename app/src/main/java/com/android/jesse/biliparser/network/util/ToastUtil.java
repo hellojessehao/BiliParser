@@ -37,6 +37,10 @@ public class ToastUtil {
         td.createShort().show();
     }
 
+    public static void shortShow(int resId) {
+        shortShow(App.getInstance().getString(resId));
+    }
+
 
     Context context;
     Toast toast;

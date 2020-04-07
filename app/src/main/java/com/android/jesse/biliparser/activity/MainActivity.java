@@ -24,7 +24,9 @@ import com.android.jesse.biliparser.components.WaitDialog;
 import com.android.jesse.biliparser.network.base.BaseActivity;
 import com.android.jesse.biliparser.network.model.contract.MainContract;
 import com.android.jesse.biliparser.network.model.presenter.MainPresenter;
+import com.android.jesse.biliparser.network.util.ToastUtil;
 import com.android.jesse.biliparser.utils.LogUtils;
+import com.android.jesse.biliparser.utils.NetLoadListener;
 import com.android.jesse.biliparser.utils.Session;
 import com.android.jesse.biliparser.utils.Utils;
 import com.blankj.utilcode.util.ActivityUtils;
@@ -72,10 +74,18 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == 0) {
+                NetLoadListener.getInstance().stopListening();
                 waitDialog.dismiss();
                 Session.getSession().put(Constant.KEY_DOCUMENT,msg.obj);
                 ActivityUtils.startActivity(SearchResultDisplayActivity.class);
             }
+        }
+    };
+    private NetLoadListener.Callback callback = new NetLoadListener.Callback() {
+        @Override
+        public void onNetLoadFailed() {
+            ToastUtil.shortShow(R.string.net_load_failed);
+            waitDialog.dismiss();
         }
     };
 
@@ -119,6 +129,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                     @Override
                     public void run() {
                         try{
+                            NetLoadListener.getInstance().startListening(callback);
                             Connection connection = Jsoup.connect("http://www.imomoe.in/search.asp");
                             connection.userAgent(Constant.USER_AGENT_FORPC);
                             connection.data("searchword",word);
@@ -126,9 +137,10 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                             Document document = connection.method(Connection.Method.POST).post();
                             LogUtils.d(TAG+" html = \n"+document.outerHtml());
                             mHandler.sendMessage(Message.obtain(mHandler, 0, document));
-                            //TODO:增加请求失败的处理
                         }catch (IOException ioe){
                             ioe.printStackTrace();
+                            waitDialog.dismiss();
+                            NetLoadListener.getInstance().stopListening();
                         }
                     }
                 }).start();
@@ -182,4 +194,9 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         return super.onKeyDown(keyCode, event);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        NetLoadListener.getInstance().removeLastCallback();
+    }
 }

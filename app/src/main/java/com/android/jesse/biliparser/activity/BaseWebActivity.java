@@ -15,6 +15,8 @@ import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -29,6 +31,7 @@ import com.android.jesse.biliparser.components.WaitDialog;
 import com.android.jesse.biliparser.network.base.SimpleActivity;
 import com.android.jesse.biliparser.utils.LogUtils;
 import com.android.jesse.biliparser.utils.Utils;
+import com.blankj.utilcode.util.SizeUtils;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -55,6 +58,8 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
 
     @BindView(R.id.base_web_webview)
     protected WebView mWebView;
+    @BindView(R.id.tv_no_data)
+    TextView tv_no_data;
     @BindView(R.id.base_web_progress_bar)
     ProgressBar progressBar;
     @BindView(R.id.tv_title)
@@ -79,10 +84,7 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if(msg.what == 0){
-                removeADs((Document)msg.obj);
-                waitDialog.dismiss();
-            }else if(msg.what == 1){
+            if(msg.what == 1){
                 mWebView.setVisibility(View.GONE);
                 tv_debug.setText((String)msg.obj);
             }
@@ -103,14 +105,15 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
             title = getIntent().getStringExtra(Constant.KEY_TITLE);
             url = getIntent().getStringExtra(Constant.KEY_URL);
             needWaitParse = getIntent().getBooleanExtra(Constant.KEY_NEED_WAIT_PARSE,false);
+            waitDialog = new WaitDialog(mContext,R.style.Dialog_Translucent_Background);
             if(!TextUtils.isEmpty(title)){
                 tv_title.setText(title);
             }
             if(!TextUtils.isEmpty(url) && !needWaitParse){
+                waitDialog.show();
                 mWebView.loadUrl(url);
             }
             if(needWaitParse){
-                waitDialog = new WaitDialog(mContext,R.style.Dialog_Translucent_Background);
                 parseHtmlFromUrl();
             }
         }
@@ -191,8 +194,9 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
                     stringBuilder.append(new String(buf,0,len));
                 }
                 String js = stringBuilder.toString();
-                Log.d(TAG," js = "+js);
                 mWebView.loadUrl(js);
+                String setHeightJS = String.format(getResources().getString(R.string.set_video_height_js),400);
+                mWebView.loadUrl(setHeightJS);
                 inputStream.close();
             }catch (IOException ioe){
                 ioe.printStackTrace();
@@ -295,7 +299,6 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
                     Document document = connection.method(Connection.Method.GET).get();
                     LogUtils.d(TAG+" html = \n"+document.outerHtml());
                     mHandler.sendMessage(Message.obtain(mHandler, 0, document));
-                    //TODO:增加请求失败的处理
                 }catch (IOException ioe){
                     ioe.printStackTrace();
                     waitDialog.dismiss();
@@ -307,40 +310,18 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
     final class CustomScript{
 
         @JavascriptInterface
-        public void getHtml(String html){
+        public void log(String html){
             LogUtils.d(TAG+" html : \n"+html);
-//            mHandler.sendMessage(Message.obtain(mHandler,1,html));
-//            Document document = Jsoup.parse(html);
-//            Elements divs = document.select("div");
-//            for(int i=0;i<divs.size();i++){
-//                Element div = divs.get(i);
-//                if(!div.tagName().contains("pp")){
-//                    div.remove();
-//                }
-//            }
-//            LogUtils.d(TAG+" after remove html : \n"+document.html()+" ;after remove outHtml : \n"+document.outerHtml());
-//            mHandler.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    mWebView.loadUrl(document.html());
-//                }
-//            });
         }
 
-    }
-
-    private void removeADs(Document document){
-        Elements divs = document.select("div");
-        Element ppDiv = document.selectFirst("div.pp");
-        String ppOutHtml = ppDiv.outerHtml();
-        for(int i=0;i<divs.size();i++){
-            Element div = divs.get(i);
-            div.remove();
+        @JavascriptInterface
+        public void onJSLoadComplete(){
+            LogUtils.d(TAG+" onJSLoadComplete...");
+            waitDialog.dismiss();
+            mWebView.setVisibility(View.VISIBLE);
+            tv_no_data.setVisibility(View.GONE);
         }
-        Element body = document.selectFirst("body");
-        body.html(ppOutHtml);
-        LogUtils.d(TAG+" removeAds : \n"+document.outerHtml());
-        mWebView.loadUrl(document.outerHtml());
+
     }
 
     private void parseDocument(Document document){
@@ -352,7 +333,8 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            goBack();
+//            goBack();
+            onLeftBackward();
             return true;
         }
 
