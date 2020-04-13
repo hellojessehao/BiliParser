@@ -9,31 +9,27 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import com.android.jesse.biliparser.R;
 import com.android.jesse.biliparser.adapter.ChooseSectionAdapter;
 import com.android.jesse.biliparser.base.Constant;
 import com.android.jesse.biliparser.components.WaitDialog;
 import com.android.jesse.biliparser.network.base.SimpleActivity;
 import com.android.jesse.biliparser.network.component.OffsetRecyclerDivider;
+import com.android.jesse.biliparser.network.model.bean.SearchResultBean;
 import com.android.jesse.biliparser.network.model.bean.SectionBean;
-import com.android.jesse.biliparser.network.util.ToastUtil;
 import com.android.jesse.biliparser.utils.GlideUtil;
 import com.android.jesse.biliparser.utils.LogUtils;
 import com.android.jesse.biliparser.utils.NetLoadListener;
 import com.blankj.utilcode.util.SizeUtils;
-
-import org.json.JSONObject;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 
 /**
@@ -84,7 +80,7 @@ public class ChooseSectionActivity extends SimpleActivity {
         @Override
         public void onNetLoadFailed() {
             waitDialog.dismiss();
-            ToastUtil.shortShow(R.string.net_load_failed);
+            Toast.makeText(mContext, R.string.net_load_failed, Toast.LENGTH_SHORT).show();
         }
     };
 

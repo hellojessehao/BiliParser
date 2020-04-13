@@ -28,6 +28,7 @@ public abstract class SimpleActivity extends SupportActivity {
     private Unbinder mUnBinder;
     protected ImageView iv_back;
     protected TextView tv_title;
+    protected ImageView iv_right;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,6 +55,22 @@ public abstract class SimpleActivity extends SupportActivity {
             tv_title = findViewById(R.id.tv_title);
             tv_title.setText(getTitleName());
         }
+        if(findViewById(R.id.iv_right) != null){
+            iv_right = findViewById(R.id.iv_right);
+            iv_right.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onRightClick();
+                }
+            });
+        }
+    }
+
+    /**
+     * 右侧按钮点击事件
+     */
+    protected void onRightClick(){
+
     }
 
     /**

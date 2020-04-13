@@ -36,6 +36,7 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             />
         <activity android:name=".activity.VideoPlayActivity" />
+        <activity android:name=".activity.HistoryVideoActivity" />
     </application>
 
 </manifest>

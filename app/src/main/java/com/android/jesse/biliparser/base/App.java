@@ -12,6 +12,7 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
 
+import com.android.jesse.biliparser.db.base.DbHelper;
 import com.android.jesse.biliparser.network.component.InitializeService;
 import com.android.jesse.biliparser.network.di.component.AppComponent;
 import com.android.jesse.biliparser.network.di.component.DaggerAppComponent;
@@ -65,6 +66,8 @@ public class App extends Application implements Application.ActivityLifecycleCal
         Logger.addLogAdapter(new AndroidLogAdapter());
 
         registerActivityLifecycleCallbacks(this);//注册APP生命周期监听
+        //初始化DbHelper
+        DbHelper.initInstance(mContext);
     }
 
     public static App getApp() {

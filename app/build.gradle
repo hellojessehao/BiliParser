@@ -77,4 +77,10 @@ dependencies {
     //@{饺子播放器
     implementation 'cn.jzvd:jiaozivideoplayer:6.2.10'
     //@}
+    //@{ROOM数据库
+    implementation('android.arch.persistence.room:runtime:1.0.0') {
+        exclude group: 'com.android.support'
+    }
+    annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
+    //@}
 }

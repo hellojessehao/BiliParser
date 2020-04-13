@@ -12,7 +12,11 @@ import com.android.jesse.biliparser.R;
 import com.android.jesse.biliparser.activity.BaseWebActivity;
 import com.android.jesse.biliparser.activity.VideoPlayActivity;
 import com.android.jesse.biliparser.base.Constant;
+import com.android.jesse.biliparser.db.bean.HistoryVideoBean;
+import com.android.jesse.biliparser.network.model.bean.SearchResultBean;
 import com.android.jesse.biliparser.network.model.bean.SectionBean;
+import com.android.jesse.biliparser.utils.Session;
+
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,6 +52,10 @@ public class ChooseSectionAdapter extends RecyclerView.Adapter<ChooseSectionAdap
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SearchResultBean searchResultBean = (SearchResultBean) Session.getSession().request(Constant.KEY_RESULT_BEAN);
+                HistoryVideoBean historyVideoBean = new HistoryVideoBean();
+                historyVideoBean.setCurrentIndex(position+1);
+
                 Intent intent = new Intent(mContext,BaseWebActivity.class);
                 intent.putExtra(Constant.KEY_TITLE,sectionBean.getTitle());
                 intent.putExtra(Constant.KEY_URL,sectionBean.getUrl());

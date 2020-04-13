@@ -148,6 +148,7 @@ public class SearchResultDisplayActivity extends SimpleActivity {
         adapter.setOnItemClickListener(new SearchResultAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(SearchResultBean resultBean) {
+                Session.getSession().put(Constant.KEY_RESULT_BEAN,resultBean);
                 Intent intent = new Intent(mContext,ChooseSectionActivity.class);
                 intent.putExtra(Constant.KEY_TITLE,resultBean.getTitle());
                 intent.putExtra(Constant.KEY_URL,resultBean.getUrl());

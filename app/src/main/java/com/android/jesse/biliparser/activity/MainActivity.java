@@ -84,7 +84,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     private NetLoadListener.Callback callback = new NetLoadListener.Callback() {
         @Override
         public void onNetLoadFailed() {
-            ToastUtil.shortShow(R.string.net_load_failed);
+            Toast.makeText(mContext, R.string.net_load_failed, Toast.LENGTH_SHORT).show();
             waitDialog.dismiss();
         }
     };
@@ -107,6 +107,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     @Override
     protected void initEventAndData() {
         iv_back.setVisibility(View.GONE);
+        iv_right.setVisibility(View.VISIBLE);
 
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(mContext, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 101);
@@ -114,6 +115,12 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         waitDialog = new WaitDialog(mContext, R.style.Dialog_Translucent_Background);
     }
 
+
+    @Override
+    protected void onRightClick() {
+        super.onRightClick();
+        //TODO:跳转历史记录
+    }
 
     @OnClick({R.id.btn_translate})
     public void onClick(View v) {
