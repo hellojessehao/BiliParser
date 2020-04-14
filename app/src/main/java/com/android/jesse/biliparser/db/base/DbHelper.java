@@ -40,8 +40,8 @@ public class DbHelper implements HistoryVideoDao {
     }
 
     @Override
-    public void insertHistoryVideo(HistoryVideoBean... historyVideoBeans) {
-        historyVideoDao.insertHistoryVideo(historyVideoBeans);
+    public List<Long> insertHistoryVideo(HistoryVideoBean... historyVideoBeans) {
+        return historyVideoDao.insertHistoryVideo(historyVideoBeans);
     }
 
     @Override
@@ -62,5 +62,10 @@ public class DbHelper implements HistoryVideoDao {
     @Override
     public int deleteByVideoId(int videoId) {
         return historyVideoDao.deleteByVideoId(videoId);
+    }
+
+    @Override
+    public int updateIndexByVideoId(int currentIndex, int videoId) {
+        return historyVideoDao.updateIndexByVideoId(currentIndex,videoId);
     }
 }

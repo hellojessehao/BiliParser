@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_white_radius_8"
+    android:paddingStart="15dp"
+    android:paddingTop="20dp"
+    android:paddingEnd="10dp"
+    android:paddingBottom="14dp"
+    android:maxHeight="500dp"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="提示"
+            android:textColor="@color/color_maintext_title"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_hint_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_hint"
+            android:layout_marginTop="20dp"
+            android:text="确定要删除该课件？
+删除后，课件将无法恢复！"
+            android:textColor="@color/color_maintext_title"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_positive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_hint_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="20dp"
+            android:padding="5dp"
+            android:text="去登录"
+            android:textColor="@color/color_selected_tags"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_negative"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_hint_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="27dp"
+            android:layout_toStartOf="@id/tv_positive"
+            android:padding="5dp"
+            android:text="下次登录"
+            android:textColor="@color/color_subtext_subtitle"
+            android:textSize="16sp" />
+    </RelativeLayout>
+</ScrollView>

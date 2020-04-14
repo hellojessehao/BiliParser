@@ -18,7 +18,7 @@ import java.util.List;
 public interface HistoryVideoDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertHistoryVideo(HistoryVideoBean... historyVideoBeans);
+    List<Long> insertHistoryVideo(HistoryVideoBean... historyVideoBeans);
 
     @Query("SELECT * FROM historyvideo")
     List<HistoryVideoBean> queryAll();
@@ -31,5 +31,9 @@ public interface HistoryVideoDao {
 
     @Query("DELETE FROM historyvideo where videoId = :videoId")
     int deleteByVideoId(int videoId);
+
+    @Query("UPDATE historyvideo SET currentIndex = :currentIndex where videoId = :videoId")
+    int updateIndexByVideoId(int currentIndex,int videoId);
+
 
 }

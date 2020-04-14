@@ -11,27 +11,16 @@ import android.arch.persistence.room.PrimaryKey;
 @Entity(tableName = "HistoryVideo")
 public class HistoryVideoBean {
 
-    @PrimaryKey(autoGenerate = true)
-    private int id;
+    @PrimaryKey
     private int videoId;//保存动漫名的hashcode，每种动漫独一无二
     private String url;
     private String cover;//封面
     private String title;
-    private String playCount;//播放量
-    private String date;
-    private String author;
     private int currentIndex;//最近观看的集数
     private String infos;
     private String alias;
     private String desc;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
+    private String date;//观看日期
 
     public int getVideoId() {
         return videoId;
@@ -63,30 +52,6 @@ public class HistoryVideoBean {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getPlayCount() {
-        return playCount;
-    }
-
-    public void setPlayCount(String playCount) {
-        this.playCount = playCount;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
     }
 
     public int getCurrentIndex() {
@@ -121,21 +86,26 @@ public class HistoryVideoBean {
         this.desc = desc;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
     @Override
     public String toString() {
         return "HistoryVideoBean{" +
-                "id=" + id +
-                ", videoId=" + videoId +
+                "videoId=" + videoId +
                 ", url='" + url + '\'' +
                 ", cover='" + cover + '\'' +
                 ", title='" + title + '\'' +
-                ", playCount='" + playCount + '\'' +
-                ", date='" + date + '\'' +
-                ", author='" + author + '\'' +
                 ", currentIndex=" + currentIndex +
                 ", infos='" + infos + '\'' +
                 ", alias='" + alias + '\'' +
                 ", desc='" + desc + '\'' +
+                ", date='" + date + '\'' +
                 '}';
     }
 }

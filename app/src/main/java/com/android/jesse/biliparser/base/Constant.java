@@ -43,5 +43,11 @@ public class Constant {
     public static final String KEY_NEED_WAIT_PARSE = "key_need_wait_parse";
     public static final String USER_AGENT_FORPC = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36";
     public static final String KEY_RESULT_BEAN = "key_result_bean";
+    public static final String KEY_CURRENT_INDEX = "key_current_index";
+    public static final String KEY_VIDEO_ID = "key_video_id";
+    //@}
+
+    //@{BROADCAST ACTIONS
+    public static final String ACTION_UPDATE_CURRENT_INDEX = "action_update_current_index";
     //@}
 }

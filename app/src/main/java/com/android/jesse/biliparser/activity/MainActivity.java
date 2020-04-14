@@ -119,7 +119,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     @Override
     protected void onRightClick() {
         super.onRightClick();
-        //TODO:跳转历史记录
+        ActivityUtils.startActivity(HistoryVideoActivity.class);
     }
 
     @OnClick({R.id.btn_translate})

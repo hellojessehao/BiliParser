@@ -3,6 +3,7 @@ package com.android.jesse.biliparser.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,7 @@ public class HistoryVideoAdapter extends RecyclerView.Adapter<HistoryVideoAdapte
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        ViewHolder viewHolder = new ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.search_result_adapter,null,false));
+        ViewHolder viewHolder = new ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.history_video_adapter,null,false));
         return viewHolder;
     }
 
@@ -51,13 +52,27 @@ public class HistoryVideoAdapter extends RecyclerView.Adapter<HistoryVideoAdapte
         viewHolder.tv_alias.setText(historyVideoBean.getAlias());
         viewHolder.tv_infos.setText(historyVideoBean.getInfos());
         viewHolder.tv_desc.setTextColor(mContext.getColor(R.color.color_selected_tags));
-        viewHolder.tv_desc.setText("已观看到第"+(historyVideoBean.getCurrentIndex()+1)+"集");
+        viewHolder.tv_desc.setText("已观看到第"+historyVideoBean.getCurrentIndex()+"集");
+        if(TextUtils.isEmpty(historyVideoBean.getDate())){
+            viewHolder.tv_date.setText("时间未记录");
+        }else{
+            viewHolder.tv_date.setText(historyVideoBean.getDate());
+        }
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(onItemClickListener != null){
                     onItemClickListener.onItemClick(historyVideoBean);
                 }
+            }
+        });
+        viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if(onItemClickListener != null){
+                    onItemClickListener.onItemLongClick(position,historyVideoBean,viewHolder.itemView);
+                }
+                return true;
             }
         });
     }
@@ -71,6 +86,7 @@ public class HistoryVideoAdapter extends RecyclerView.Adapter<HistoryVideoAdapte
 
     public interface OnItemClickListener{
         void onItemClick(HistoryVideoBean videoBean);
+        void onItemLongClick(int position,HistoryVideoBean videoBean,View itemView);
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -88,6 +104,8 @@ public class HistoryVideoAdapter extends RecyclerView.Adapter<HistoryVideoAdapte
         TextView tv_infos;
         @BindView(R.id.tv_desc)
         TextView tv_desc;
+        @BindView(R.id.tv_date)
+        TextView tv_date;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,SizeUtils.dp2px(150));

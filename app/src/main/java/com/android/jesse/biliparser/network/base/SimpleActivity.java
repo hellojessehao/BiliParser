@@ -57,6 +57,7 @@ public abstract class SimpleActivity extends SupportActivity {
         }
         if(findViewById(R.id.iv_right) != null){
             iv_right = findViewById(R.id.iv_right);
+            iv_right.setVisibility(View.GONE);
             iv_right.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
