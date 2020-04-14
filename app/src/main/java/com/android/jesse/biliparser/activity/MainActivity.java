@@ -3,6 +3,8 @@ package com.android.jesse.biliparser.activity;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -11,25 +13,30 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.jesse.biliparser.R;
 import com.android.jesse.biliparser.base.Constant;
 import com.android.jesse.biliparser.components.WaitDialog;
+import com.android.jesse.biliparser.db.base.DbHelper;
 import com.android.jesse.biliparser.network.base.BaseActivity;
 import com.android.jesse.biliparser.network.model.contract.MainContract;
 import com.android.jesse.biliparser.network.model.presenter.MainPresenter;
 import com.android.jesse.biliparser.network.util.ToastUtil;
+import com.android.jesse.biliparser.utils.DialogUtil;
 import com.android.jesse.biliparser.utils.LogUtils;
 import com.android.jesse.biliparser.utils.NetLoadListener;
 import com.android.jesse.biliparser.utils.Session;
 import com.android.jesse.biliparser.utils.Utils;
 import com.blankj.utilcode.util.ActivityUtils;
+import com.blankj.utilcode.util.SizeUtils;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -88,6 +95,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
             waitDialog.dismiss();
         }
     };
+    private PopupWindow spinnerPop;
 
     @Override
     protected String getTitleName() {
@@ -108,6 +116,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     protected void initEventAndData() {
         iv_back.setVisibility(View.GONE);
         iv_right.setVisibility(View.VISIBLE);
+        iv_right.setImageResource(R.mipmap.ic_main_menu);
+        initSpinnerPop();
 
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(mContext, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 101);
@@ -115,11 +125,38 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         waitDialog = new WaitDialog(mContext, R.style.Dialog_Translucent_Background);
     }
 
+    private void initSpinnerPop(){
+        spinnerPop = new PopupWindow(mContext);
+        View contentView = LayoutInflater.from(mContext).inflate(R.layout.main_menu_spinner_pop,null,false);
+        spinnerPop.setContentView(contentView);
+        spinnerPop.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        spinnerPop.setAnimationStyle(R.style.WindowStyle);
+        spinnerPop.setOutsideTouchable(true);
+        spinnerPop.setWidth(SizeUtils.dp2px(45));
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                spinnerPop.dismiss();
+                switch (v.getId()){
+                    case R.id.tv_history:
+                        ActivityUtils.startActivity(HistoryVideoActivity.class);
+                        break;
+                    case R.id.tv_collect:
+
+                        break;
+                }
+            }
+        };
+        TextView tv_history = contentView.findViewById(R.id.tv_history);
+        tv_history.setOnClickListener(onClickListener);
+        TextView tv_collect = contentView.findViewById(R.id.tv_collect);
+        tv_collect.setOnClickListener(onClickListener);
+    }
 
     @Override
     protected void onRightClick() {
         super.onRightClick();
-        ActivityUtils.startActivity(HistoryVideoActivity.class);
+        spinnerPop.showAsDropDown(iv_right,0,-SizeUtils.dp2px(8));
     }
 
     @OnClick({R.id.btn_translate})

@@ -35,8 +35,15 @@
             android:hardwareAccelerated ="true"
             android:configChanges="orientation|screenSize|keyboardHidden"
             />
-        <activity android:name=".activity.VideoPlayActivity" />
-        <activity android:name=".activity.HistoryVideoActivity" />
+        <activity android:name=".activity.VideoPlayActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".activity.HistoryVideoActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".activity.CollectionActivity"
+            android:screenOrientation="portrait"
+            />
     </application>
 
 </manifest>

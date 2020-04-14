@@ -8,7 +8,9 @@ import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.android.jesse.biliparser.db.bean.CollectionBean;
 import com.android.jesse.biliparser.db.bean.HistoryVideoBean;
+import com.android.jesse.biliparser.db.dao.CollectionDao;
 import com.android.jesse.biliparser.db.dao.HistoryVideoDao;
 
 /**
@@ -16,7 +18,7 @@ import com.android.jesse.biliparser.db.dao.HistoryVideoDao;
  * @author: zhangshihao
  * @date: 2020/4/8
  */
-@Database(entities = {HistoryVideoBean.class}, version = 2, exportSchema = false)
+@Database(entities = {HistoryVideoBean.class,CollectionBean.class}, version = 2, exportSchema = false)
 public abstract class AppDataBase extends RoomDatabase {
 
     private static final String DB_NAME = "AppDatabase.db";
@@ -44,4 +46,7 @@ public abstract class AppDataBase extends RoomDatabase {
     };
 
     public abstract HistoryVideoDao getHistoryVideoDao();
+
+    public abstract CollectionDao getCollectionDao();
+
 }

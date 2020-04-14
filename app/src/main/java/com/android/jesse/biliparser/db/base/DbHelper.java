@@ -2,7 +2,9 @@ package com.android.jesse.biliparser.db.base;
 
 import android.content.Context;
 
+import com.android.jesse.biliparser.db.bean.CollectionBean;
 import com.android.jesse.biliparser.db.bean.HistoryVideoBean;
+import com.android.jesse.biliparser.db.dao.CollectionDao;
 import com.android.jesse.biliparser.db.dao.HistoryVideoDao;
 
 import java.util.List;
@@ -12,7 +14,7 @@ import java.util.List;
  * @author: zhangshihao
  * @date: 2020/4/13
  */
-public class DbHelper implements HistoryVideoDao {
+public class DbHelper implements HistoryVideoDao,CollectionDao {
 
     private static final String TAG = DbHelper.class.getSimpleName();
     private static DbHelper instance;
@@ -67,5 +69,35 @@ public class DbHelper implements HistoryVideoDao {
     @Override
     public int updateIndexByVideoId(int currentIndex, int videoId) {
         return historyVideoDao.updateIndexByVideoId(currentIndex,videoId);
+    }
+
+    @Override
+    public List<Long> insertCollection(CollectionBean... collectionBeans) {
+        return null;
+    }
+
+    @Override
+    public List<HistoryVideoBean> queryAllCollection() {
+        return null;
+    }
+
+    @Override
+    public HistoryVideoBean queryCollectionByVideoId(int videoId) {
+        return null;
+    }
+
+    @Override
+    public int clearCollection() {
+        return 0;
+    }
+
+    @Override
+    public int deleteCollectionByVideoId(int videoId) {
+        return 0;
+    }
+
+    @Override
+    public int updateCollectionIndexByVideoId(int currentIndex, int videoId) {
+        return 0;
     }
 }

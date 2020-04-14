@@ -108,7 +108,7 @@ public class HistoryVideoActivity extends SimpleActivity {
     @Override
     protected void onRightClick() {
         super.onRightClick();
-        spinnerPop.showAsDropDown(iv_right,0,-SizeUtils.dp2px(15));
+        spinnerPop.showAsDropDown(iv_right,0,-SizeUtils.dp2px(12));
     }
 
     @Override
