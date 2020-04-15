@@ -34,6 +34,51 @@
                 android:textColor="@color/color_maintext_title"
                 />
 
+            <RelativeLayout
+                android:id="@+id/rl_search_history_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                >
+
+                <TextView
+                    android:id="@+id/tv_search_history"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:padding="10dp"
+                    android:text="搜索历史"
+                    android:textColor="@color/color_subtext_subtitle"
+                    android:textSize="14sp" />
+
+                <ImageView
+                    android:id="@+id/iv_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="5dp"
+                    android:padding="10dp"
+                    android:src="@mipmap/ic_delete" />
+
+                <ScrollView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/iv_delete"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginStart="5dp"
+                    android:scrollbars="none"
+                    >
+
+                    <com.android.jesse.biliparser.view.TagFlowLayout
+                        android:id="@+id/fl_search_history"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:max_select="1" />
+                </ScrollView>
+            </RelativeLayout>
+
             <Button
                 android:id="@+id/btn_translate"
                 android:layout_width="match_parent"

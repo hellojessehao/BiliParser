@@ -19,6 +19,7 @@ import com.android.jesse.biliparser.network.di.component.DaggerAppComponent;
 import com.android.jesse.biliparser.network.di.module.AppModule;
 import com.android.jesse.biliparser.network.di.module.HttpModule;
 import com.android.jesse.biliparser.utils.CrashHandler;
+import com.android.jesse.biliparser.utils.SharePreferenceUtil;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 
@@ -68,6 +69,8 @@ public class App extends Application implements Application.ActivityLifecycleCal
         registerActivityLifecycleCallbacks(this);//注册APP生命周期监听
         //初始化DbHelper
         DbHelper.initInstance(mContext);
+        //初始化缓存工具类
+        SharePreferenceUtil.init(mContext);
     }
 
     public static App getApp() {

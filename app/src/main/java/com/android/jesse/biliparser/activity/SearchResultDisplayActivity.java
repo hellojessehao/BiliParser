@@ -80,11 +80,6 @@ public class SearchResultDisplayActivity extends SimpleActivity {
     }
 
     @Override
-    protected String getTitleName() {
-        return "搜索结果展示";
-    }
-
-    @Override
     protected void onBackClick() {
         finish();
     }
@@ -92,6 +87,11 @@ public class SearchResultDisplayActivity extends SimpleActivity {
     @Override
     protected void initEventAndData() {
         Document document = (Document) Session.getSession().get(Constant.KEY_DOCUMENT);
+        if(getIntent() != null && !TextUtils.isEmpty(getIntent().getStringExtra(Constant.KEY_TITLE))){
+            tv_title.setText(getIntent().getStringExtra(Constant.KEY_TITLE));
+        }else{
+            tv_title.setText("搜索结果展示");
+        }
         if(document == null){
             tv_no_data.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);

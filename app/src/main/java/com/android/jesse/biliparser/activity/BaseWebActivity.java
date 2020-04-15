@@ -29,6 +29,7 @@ import com.android.jesse.biliparser.R;
 import com.android.jesse.biliparser.base.Constant;
 import com.android.jesse.biliparser.components.WaitDialog;
 import com.android.jesse.biliparser.network.base.SimpleActivity;
+import com.android.jesse.biliparser.network.util.ToastUtil;
 import com.android.jesse.biliparser.utils.LogUtils;
 import com.android.jesse.biliparser.utils.Utils;
 import com.blankj.utilcode.util.SizeUtils;
@@ -77,6 +78,7 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
     protected String url;
     private boolean needWaitParse = false;
     private WaitDialog waitDialog;
+    private final int TIMEOUT_MILLS = 30*1000;
 
     private boolean enableProgressBar = false;//是否显示进度条
     @SuppressLint("HandlerLeak")
@@ -87,6 +89,9 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
             if(msg.what == 1){
                 mWebView.setVisibility(View.GONE);
                 tv_debug.setText((String)msg.obj);
+            }else if(msg.what == 2){
+                waitDialog.dismiss();
+                ToastUtil.shortShow("加载超时，可继续等待或退出重试~");
             }
         }
     };
@@ -111,7 +116,9 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
             }
             if(!TextUtils.isEmpty(url) && !needWaitParse){
                 waitDialog.show();
+                contentView.setVisibility(View.VISIBLE);
                 mWebView.loadUrl(url);
+                mHandler.sendEmptyMessageDelayed(2,TIMEOUT_MILLS);//30s内js未执行完成视为超时
             }
             if(needWaitParse){
                 parseHtmlFromUrl();
@@ -318,6 +325,7 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
         public void onJSLoadComplete(){
             LogUtils.d(TAG+" onJSLoadComplete...");
             waitDialog.dismiss();
+            contentView.setVisibility(View.GONE);
             mWebView.setVisibility(View.VISIBLE);
             tv_no_data.setVisibility(View.GONE);
         }

@@ -2,12 +2,15 @@ package com.android.jesse.biliparser.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -15,10 +18,13 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,9 +40,15 @@ import com.android.jesse.biliparser.utils.DialogUtil;
 import com.android.jesse.biliparser.utils.LogUtils;
 import com.android.jesse.biliparser.utils.NetLoadListener;
 import com.android.jesse.biliparser.utils.Session;
+import com.android.jesse.biliparser.utils.SharePreferenceUtil;
 import com.android.jesse.biliparser.utils.Utils;
+import com.android.jesse.biliparser.view.FlowLayout;
+import com.android.jesse.biliparser.view.TagAdapter;
+import com.android.jesse.biliparser.view.TagFlowLayout;
 import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.SizeUtils;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -54,7 +66,10 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.SSLContext;
@@ -73,6 +88,12 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     EditText et_word;
     @BindView(R.id.tv_result)
     TextView tv_result;
+    @BindView(R.id.rl_search_history_container)
+    RelativeLayout rl_search_history_container;
+    @BindView(R.id.fl_search_history)
+    TagFlowLayout fl_search_history;
+    @BindView(R.id.btn_translate)
+    Button btn_translate;
 
     private WaitDialog waitDialog;
     @SuppressLint("HandlerLeak")
@@ -83,8 +104,32 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
             if (msg.what == 0) {
                 NetLoadListener.getInstance().stopListening();
                 waitDialog.dismiss();
+                String word = et_word.getText().toString();
                 Session.getSession().put(Constant.KEY_DOCUMENT,msg.obj);
-                ActivityUtils.startActivity(SearchResultDisplayActivity.class);
+                Intent intent = new Intent(mContext,SearchResultDisplayActivity.class);
+                intent.putExtra(Constant.KEY_TITLE,word);
+                startActivityForResult(intent,102);
+                //将搜索词存缓存
+                List<String> searchWordList = getHistoryCacheList();
+                String cacheResult = "";//最终存进缓存的字符串
+                if(Utils.isListEmpty(searchWordList)){
+                    searchWordList = new ArrayList<>();
+                    searchWordList.add(word);
+                }else{
+                    if(!searchWordList.contains(word)){
+                        //只显示最近15个历史搜索词
+                        if(searchWordList.size() == 15){
+                            searchWordList.remove(searchWordList.size()-1);
+                        }
+                        searchWordList.add(0,word);//新词加到首位
+                    }else{
+                        searchWordList.remove(word);
+                        searchWordList.add(0,word);//新词加到首位
+                    }
+                }
+                cacheResult = new Gson().toJson(searchWordList);
+                LogUtils.i(TAG+" cacheResult = "+cacheResult);
+                SharePreferenceUtil.put(Constant.SPKEY_SEARCH_HISTORY,cacheResult);
             }
         }
     };
@@ -96,6 +141,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         }
     };
     private PopupWindow spinnerPop;
+    private Dialog clearHintDialog;
 
     @Override
     protected String getTitleName() {
@@ -118,11 +164,59 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         iv_right.setVisibility(View.VISIBLE);
         iv_right.setImageResource(R.mipmap.ic_main_menu);
         initSpinnerPop();
-
+        initSearchHistory();
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(mContext, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 101);
         }
         waitDialog = new WaitDialog(mContext, R.style.Dialog_Translucent_Background);
+    }
+
+    //测试用，制造15条历史搜索假数据
+    private void createFakeHistory(){
+        List<String> fakeList = new ArrayList<>();
+        for(int i=0;i<15;i++){
+//            if(i == 0){
+//                fakeList.add("爱神的箭发克里斯京东方克拉斯发多久");
+//                continue;
+//            }
+            fakeList.add("fake data "+i);
+        }
+        SharePreferenceUtil.put(Constant.SPKEY_SEARCH_HISTORY,new Gson().toJson(fakeList));
+    }
+
+    private void initSearchHistory(){
+//        createFakeHistory();
+        List<String> searchWordList = getHistoryCacheList();
+        if(Utils.isListEmpty(searchWordList)){
+            rl_search_history_container.setVisibility(View.GONE);
+        }else{
+            rl_search_history_container.setVisibility(View.VISIBLE);
+            TagAdapter<String> tagAdapter = new TagAdapter<String>(searchWordList) {
+                @Override
+                public View getView(FlowLayout parent, int position, String s) {
+                    TextView tv = (TextView) LayoutInflater.from(mContext).inflate(R.layout.listory_tag_layout,
+                            fl_search_history, false);
+                    tv.setText(s);
+                    return tv;
+                }
+            };
+            fl_search_history.setAdapter(tagAdapter);
+            fl_search_history.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
+                @Override
+                public boolean onTagClick(View view, int position, FlowLayout parent) {
+                    et_word.setText(searchWordList.get(position));
+                    et_word.setSelection(et_word.length());
+                    btn_translate.performClick();
+                    return false;
+                }
+            });
+        }
+    }
+
+    private List<String> getHistoryCacheList(){
+        String searchHistory = SharePreferenceUtil.get(Constant.SPKEY_SEARCH_HISTORY);
+        LogUtils.i(TAG+" getSearchHistory : "+searchHistory);
+        return new Gson().fromJson(searchHistory,new TypeToken<List<String>>() {}.getType());
     }
 
     private void initSpinnerPop(){
@@ -159,9 +253,24 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         spinnerPop.showAsDropDown(iv_right,0,-SizeUtils.dp2px(8));
     }
 
-    @OnClick({R.id.btn_translate})
+    @OnClick({R.id.btn_translate,R.id.iv_delete})
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.iv_delete:
+                clearHintDialog = DialogUtil.showHintDialogForCommonVersion(mContext, "确定要清空搜索历史吗？", "确定", "算了",
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                clearHintDialog.dismiss();
+                                switch (v.getId()){
+                                    case R.id.tv_positive:
+                                        SharePreferenceUtil.remove(Constant.SPKEY_SEARCH_HISTORY);
+                                        initSearchHistory();
+                                        break;
+                                }
+                            }
+                        });
+                break;
             case R.id.btn_translate:
                 String word = et_word.getText().toString();
                 if (TextUtils.isEmpty(word)) {
@@ -236,6 +345,14 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
             }
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 102){
+            initSearchHistory();
+        }
     }
 
     @Override
