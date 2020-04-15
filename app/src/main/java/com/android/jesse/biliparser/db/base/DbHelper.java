@@ -21,11 +21,13 @@ public class DbHelper implements HistoryVideoDao,CollectionDao {
     private Context mContext;
     private AppDataBase appDataBase;
     private HistoryVideoDao historyVideoDao;
+    private CollectionDao collectionDao;
 
     public DbHelper(Context context){
         this.mContext = context;
         appDataBase = AppDataBase.getInstance(this.mContext);
         historyVideoDao = appDataBase.getHistoryVideoDao();
+        collectionDao = appDataBase.getCollectionDao();
     }
 
     /**
@@ -73,31 +75,31 @@ public class DbHelper implements HistoryVideoDao,CollectionDao {
 
     @Override
     public List<Long> insertCollection(CollectionBean... collectionBeans) {
-        return null;
+        return collectionDao.insertCollection(collectionBeans);
     }
 
     @Override
-    public List<HistoryVideoBean> queryAllCollection() {
-        return null;
+    public List<CollectionBean> queryAllCollection() {
+        return collectionDao.queryAllCollection();
     }
 
     @Override
-    public HistoryVideoBean queryCollectionByVideoId(int videoId) {
-        return null;
+    public CollectionBean queryCollectionByVideoId(int videoId) {
+        return collectionDao.queryCollectionByVideoId(videoId);
     }
 
     @Override
     public int clearCollection() {
-        return 0;
+        return collectionDao.clearCollection();
     }
 
     @Override
     public int deleteCollectionByVideoId(int videoId) {
-        return 0;
+        return collectionDao.deleteCollectionByVideoId(videoId);
     }
 
     @Override
     public int updateCollectionIndexByVideoId(int currentIndex, int videoId) {
-        return 0;
+        return collectionDao.updateCollectionIndexByVideoId(currentIndex,videoId);
     }
 }

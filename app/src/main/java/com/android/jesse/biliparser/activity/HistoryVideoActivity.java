@@ -26,6 +26,7 @@ import com.android.jesse.biliparser.adapter.HistoryVideoAdapter;
 import com.android.jesse.biliparser.base.Constant;
 import com.android.jesse.biliparser.components.WaitDialog;
 import com.android.jesse.biliparser.db.base.DbHelper;
+import com.android.jesse.biliparser.db.bean.CollectionBean;
 import com.android.jesse.biliparser.db.bean.HistoryVideoBean;
 import com.android.jesse.biliparser.network.base.SimpleActivity;
 import com.android.jesse.biliparser.network.component.OffsetRecyclerDivider;
@@ -74,11 +75,24 @@ public class HistoryVideoActivity extends SimpleActivity {
             }else if(msg.what == 1){
                 historyVideoBeanList.remove(popPosition);
                 adapter.notifyItemRemoved(popPosition);
+                if(Utils.isListEmpty(historyVideoBeanList)){
+                    tv_no_data.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                }else{
+                    tv_no_data.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
             }else if(msg.what == 2){
                 historyVideoBeanList.clear();
                 adapter.notifyDataSetChanged();
                 recyclerView.setVisibility(View.GONE);
                 tv_no_data.setVisibility(View.VISIBLE);
+            }else if(msg.what == 3){
+                waitDialog.dismiss();
+                tv_no_data.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            }else if(msg.what == 4){
+                Toast.makeText(mContext, "已收藏", Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -167,7 +181,7 @@ public class HistoryVideoActivity extends SimpleActivity {
         spinnerPop.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         spinnerPop.setAnimationStyle(R.style.WindowStyle);
         spinnerPop.setOutsideTouchable(true);
-        spinnerPop.setWidth(SizeUtils.dp2px(45));
+        spinnerPop.setWidth(SizeUtils.dp2px(65));
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -218,7 +232,31 @@ public class HistoryVideoActivity extends SimpleActivity {
             public void onClick(View v) {
                 switch (v.getId()){
                     case R.id.tv_collect:
-                        Toast.makeText(mContext, "暂未开发", Toast.LENGTH_SHORT).show();
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(popVideoBean == null){
+                                    return;
+                                }
+                                CollectionBean collectionBean = new CollectionBean();
+                                collectionBean.setTitle(popVideoBean.getTitle());
+                                collectionBean.setAlias(popVideoBean.getAlias());
+                                collectionBean.setCover(popVideoBean.getCover());
+                                collectionBean.setCurrentIndex(popVideoBean.getCurrentIndex());
+                                collectionBean.setDate(popVideoBean.getDate());
+                                collectionBean.setDesc(popVideoBean.getDesc());
+                                collectionBean.setInfos(popVideoBean.getInfos());
+                                collectionBean.setUrl(popVideoBean.getUrl());
+                                collectionBean.setVideoId(popVideoBean.getVideoId());
+                                List<Long> result = DbHelper.getInstance().insertCollection(collectionBean);
+                                if(Utils.isListEmpty(result)){
+                                    LogUtils.e(TAG+" insert collectionBean failed");
+                                }else{
+                                    LogUtils.i(TAG+" insert collectionBean success");
+                                    mHandler.sendEmptyMessage(4);
+                                }
+                            }
+                        }).start();
                         longClickPop.dismiss();
                         break;
                     case R.id.tv_delete:
@@ -226,6 +264,9 @@ public class HistoryVideoActivity extends SimpleActivity {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
+                                if(popVideoBean == null){
+                                    return;
+                                }
                                 int result = DbHelper.getInstance().deleteByVideoId(popVideoBean.getVideoId());
                                 LogUtils.i(TAG+" result = "+result);
                                 if(result > 0){
@@ -252,9 +293,7 @@ public class HistoryVideoActivity extends SimpleActivity {
                 List<HistoryVideoBean> tempVideoBeanList = DbHelper.getInstance().queryAll();
                 LogUtils.i(TAG+" tempVideoBeanList size = "+tempVideoBeanList.size());
                 if(Utils.isListEmpty(tempVideoBeanList)){
-                    waitDialog.dismiss();
-                    tv_no_data.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.GONE);
+                    mHandler.sendEmptyMessage(3);
                     return;
                 }
                 mHandler.sendMessage(Message.obtain(mHandler,0,tempVideoBeanList));

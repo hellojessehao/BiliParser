@@ -11,8 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.jesse.biliparser.R;
+import com.android.jesse.biliparser.db.bean.CollectionBean;
 import com.android.jesse.biliparser.db.bean.HistoryVideoBean;
-import com.android.jesse.biliparser.network.model.bean.SearchResultBean;
 import com.android.jesse.biliparser.utils.GlideUtil;
 import com.blankj.utilcode.util.SizeUtils;
 
@@ -26,43 +26,47 @@ import butterknife.ButterKnife;
  * @author: zhangshihao
  * @date: 2020/3/24
  */
-public class HistoryVideoAdapter extends RecyclerView.Adapter<HistoryVideoAdapter.ViewHolder>{
+public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.ViewHolder>{
 
-    private static final String TAG = HistoryVideoAdapter.class.getSimpleName();
-    private List<HistoryVideoBean> historyVideoBeanList;
+    private static final String TAG = CollectionAdapter.class.getSimpleName();
+    private List<CollectionBean> collectionBeanList;
     private Context mContext;
 
-    public HistoryVideoAdapter(Context mContext, List<HistoryVideoBean> resultBeanList) {
-        this.historyVideoBeanList = resultBeanList;
+    public CollectionAdapter(Context mContext, List<CollectionBean> collectionBeanList) {
+        this.collectionBeanList = collectionBeanList;
         this.mContext = mContext;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        ViewHolder viewHolder = new ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.history_video_adapter,null,false));
+        ViewHolder viewHolder = new ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.collection_adapter,null,false));
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
-        HistoryVideoBean historyVideoBean = historyVideoBeanList.get(position);
-        GlideUtil.getInstance().loadImg(mContext,historyVideoBean.getCover(),viewHolder.iv_cover);
-        viewHolder.tv_title.setText(historyVideoBean.getTitle());
-        viewHolder.tv_alias.setText(historyVideoBean.getAlias());
-        viewHolder.tv_infos.setText(historyVideoBean.getInfos());
+        CollectionBean collectionBean = collectionBeanList.get(position);
+        GlideUtil.getInstance().loadImg(mContext,collectionBean.getCover(),viewHolder.iv_cover);
+        viewHolder.tv_title.setText(collectionBean.getTitle());
+        viewHolder.tv_alias.setText(collectionBean.getAlias());
+        viewHolder.tv_infos.setText(collectionBean.getInfos());
         viewHolder.tv_desc.setTextColor(mContext.getColor(R.color.color_selected_tags));
-        viewHolder.tv_desc.setText("已观看到第"+historyVideoBean.getCurrentIndex()+"集");
-        if(TextUtils.isEmpty(historyVideoBean.getDate())){
+        if(collectionBean.getCurrentIndex() <= 0){
+            viewHolder.tv_desc.setText("还没有观看过噢~");
+        }else{
+            viewHolder.tv_desc.setText("已观看到第"+collectionBean.getCurrentIndex()+"集");
+        }
+        if(TextUtils.isEmpty(collectionBean.getDate())){
             viewHolder.tv_date.setText("时间未记录");
         }else{
-            viewHolder.tv_date.setText(historyVideoBean.getDate());
+            viewHolder.tv_date.setText(collectionBean.getDate());
         }
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(onItemClickListener != null){
-                    onItemClickListener.onItemClick(historyVideoBean);
+                    onItemClickListener.onItemClick(collectionBean);
                 }
             }
         });
@@ -70,7 +74,7 @@ public class HistoryVideoAdapter extends RecyclerView.Adapter<HistoryVideoAdapte
             @Override
             public boolean onLongClick(View v) {
                 if(onItemClickListener != null){
-                    onItemClickListener.onItemLongClick(viewHolder.getAdapterPosition(),historyVideoBean,viewHolder.itemView);
+                    onItemClickListener.onItemLongClick(viewHolder.getAdapterPosition(),collectionBean,viewHolder.itemView);
                 }
                 return true;
             }
@@ -79,14 +83,14 @@ public class HistoryVideoAdapter extends RecyclerView.Adapter<HistoryVideoAdapte
 
     @Override
     public int getItemCount() {
-        return historyVideoBeanList==null?0:historyVideoBeanList.size();
+        return collectionBeanList==null?0:collectionBeanList.size();
     }
 
     private OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener{
-        void onItemClick(HistoryVideoBean videoBean);
-        void onItemLongClick(int position,HistoryVideoBean videoBean,View itemView);
+        void onItemClick(CollectionBean collectionBean);
+        void onItemLongClick(int position, CollectionBean collectionBean, View itemView);
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {

@@ -18,6 +18,7 @@ import com.android.jesse.biliparser.adapter.ChooseSectionAdapter;
 import com.android.jesse.biliparser.base.Constant;
 import com.android.jesse.biliparser.components.WaitDialog;
 import com.android.jesse.biliparser.db.base.DbHelper;
+import com.android.jesse.biliparser.db.bean.CollectionBean;
 import com.android.jesse.biliparser.db.bean.HistoryVideoBean;
 import com.android.jesse.biliparser.network.base.SimpleActivity;
 import com.android.jesse.biliparser.network.component.OffsetRecyclerDivider;
@@ -76,14 +77,41 @@ public class ChooseSectionActivity extends SimpleActivity {
     private WaitDialog waitDialog;
     private List<SectionBean> sectionBeanList;
     private int currentIndex = 0;
-
+    private boolean showIndex = false;//是否显示当前观看到第几集
+    private String title;
+    private int collectFlag = 0;//0未收藏 1已收藏
+    private boolean rightClickResting = false;//titlebar右边按钮是否休眠中
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            NetLoadListener.getInstance().stopListening();
-            parseDocument((Document) msg.obj);
+            if(msg.what == 0){
+                NetLoadListener.getInstance().stopListening();
+                parseDocument((Document) msg.obj);
+            }else if(msg.what == 1){
+                if(msg.obj == null){
+                    collectFlag = 0;
+                    iv_right.setImageResource(R.mipmap.ic_collect);
+                }else{
+                    collectFlag = 1;
+                    iv_right.setImageResource(R.mipmap.ic_collected);
+                }
+            }else if(msg.what == 2){
+                Toast.makeText(mContext, "收藏失败,请重新进入此页面~", Toast.LENGTH_SHORT).show();
+            }else if(msg.what == 3){
+                Toast.makeText(mContext, "收藏失败,请重试~", Toast.LENGTH_SHORT).show();
+            }else if(msg.what == 4){
+                collectFlag = 1;
+                iv_right.setImageResource(R.mipmap.ic_collected);
+                Toast.makeText(mContext, "已收藏", Toast.LENGTH_SHORT).show();
+            }else if(msg.what == 5){
+                collectFlag = 0;
+                iv_right.setImageResource(R.mipmap.ic_collect);
+                Toast.makeText(mContext, "已取消", Toast.LENGTH_SHORT).show();
+            }else if(msg.what == 6){
+                Toast.makeText(mContext, "请重试", Toast.LENGTH_SHORT).show();
+            }
         }
     };
     private NetLoadListener.Callback callback = new NetLoadListener.Callback() {
@@ -102,13 +130,68 @@ public class ChooseSectionActivity extends SimpleActivity {
     @Override
     protected void onBackClick() {
         super.onBackClick();
+        setResult(RESULT_OK);
         finish();
+    }
+
+    @Override
+    protected void onRightClick() {
+        super.onRightClick();
+        switch (collectFlag){
+            case 0://未收藏
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        SearchResultBean searchResultBean = (SearchResultBean) Session.getSession().request(Constant.KEY_RESULT_BEAN);
+                        if(searchResultBean == null){
+                            mHandler.sendEmptyMessage(2);
+                            return;
+                        }
+                        CollectionBean collectionBean = new CollectionBean();
+                        collectionBean.setCurrentIndex(currentIndex);
+                        collectionBean.setVideoId(searchResultBean.getTitle().hashCode());
+                        LogUtils.i(TAG+" videoId = "+searchResultBean.getTitle().hashCode());
+                        collectionBean.setAlias(searchResultBean.getAlias());
+                        collectionBean.setTitle(searchResultBean.getTitle());
+                        collectionBean.setUrl(searchResultBean.getUrl());
+                        collectionBean.setInfos(searchResultBean.getInfos());
+                        collectionBean.setDesc(searchResultBean.getDesc());
+                        collectionBean.setCover(searchResultBean.getCover());
+                        collectionBean.setDate(DateUtil.getDefaultTime());
+                        List<Long> result = DbHelper.getInstance().insertCollection(collectionBean);
+                        if(Utils.isListEmpty(result)){
+                            mHandler.sendEmptyMessage(3);
+                        }else{
+                            mHandler.sendEmptyMessage(4);
+                        }
+                    }
+                }).start();
+                break;
+            case 1://已收藏
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(TextUtils.isEmpty(title)){
+                            return;
+                        }
+                        int videoId = title.hashCode();
+                        LogUtils.i(TAG+" videoId = "+videoId);
+                        int result = DbHelper.getInstance().deleteCollectionByVideoId(videoId);
+                        if(result > 0){
+                            mHandler.sendEmptyMessage(5);
+                        }else{
+                            mHandler.sendEmptyMessage(6);
+                        }
+                    }
+                }).start();
+                break;
+        }
     }
 
     @Override
     protected void initEventAndData() {
         if(getIntent() != null){
-            String title = getIntent().getStringExtra(Constant.KEY_TITLE);
+            title = getIntent().getStringExtra(Constant.KEY_TITLE);
             if(!TextUtils.isEmpty(title)){
                 tv_title.setText(title);
             }
@@ -116,7 +199,13 @@ public class ChooseSectionActivity extends SimpleActivity {
             LogUtils.i(TAG+" getUrl : "+url);
             currentIndex = getIntent().getIntExtra(Constant.KEY_CURRENT_INDEX,0);
             LogUtils.i(TAG+" currentIndex = "+currentIndex);
+            if(currentIndex > 0){
+                showIndex = true;
+            }else{
+                showIndex = false;
+            }
         }
+        initCollectState();
         sectionBeanList = new ArrayList<>();
         recyclerView.setLayoutManager(new GridLayoutManager(mContext,4));
         recyclerView.addItemDecoration(new OffsetRecyclerDivider(SizeUtils.dp2px(10),SizeUtils.dp2px(10)));
@@ -125,13 +214,13 @@ public class ChooseSectionActivity extends SimpleActivity {
         adapter.setOnItemClickListener(new ChooseSectionAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position, SectionBean sectionBean) {
-                if(currentIndex > 0){
-                    currentIndex = position + 1;
+                currentIndex = position + 1;
+                if(showIndex){
                     tv_indexes.setText("已观看到第"+currentIndex+"集");
                 }
                 SearchResultBean searchResultBean = (SearchResultBean) Session.getSession().request(Constant.KEY_RESULT_BEAN);
                 HistoryVideoBean historyVideoBean = new HistoryVideoBean();
-                historyVideoBean.setCurrentIndex(position+1);
+                historyVideoBean.setCurrentIndex(currentIndex);
                 historyVideoBean.setVideoId(searchResultBean.getTitle().hashCode());
                 LogUtils.i(TAG+" videoId = "+searchResultBean.getTitle().hashCode());
                 historyVideoBean.setAlias(searchResultBean.getAlias());
@@ -150,6 +239,16 @@ public class ChooseSectionActivity extends SimpleActivity {
                             Intent intent = new Intent(Constant.ACTION_UPDATE_CURRENT_INDEX);
                             LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
                         }
+                        if(collectFlag == 1 && !TextUtils.isEmpty(title)){
+                            int videoId = title.hashCode();
+                            LogUtils.i(TAG+" videoId = "+videoId);
+                            int result = DbHelper.getInstance().updateCollectionIndexByVideoId(currentIndex,videoId);
+                            if(result > 0){
+                                LogUtils.i(TAG+" updateCollectionIndexByVideoId success");
+                            }else{
+                                LogUtils.e(TAG+" updateCollectionIndexByVideoId failed");
+                            }
+                        }
                     }
                 }).start();
 
@@ -167,6 +266,23 @@ public class ChooseSectionActivity extends SimpleActivity {
         recyclerView.setAdapter(adapter);
 
         requestDocument();
+    }
+
+    //初始化收藏按钮状态
+    private void initCollectState(){
+        if(TextUtils.isEmpty(title)){
+            return;
+        }
+        iv_right.setVisibility(View.VISIBLE);
+        int videoId = title.hashCode();
+        LogUtils.i(TAG+" videoId = "+videoId);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                CollectionBean collectionBean = DbHelper.getInstance().queryCollectionByVideoId(videoId);
+                mHandler.sendMessage(Message.obtain(mHandler,1,collectionBean));
+            }
+        }).start();
     }
 
     /**

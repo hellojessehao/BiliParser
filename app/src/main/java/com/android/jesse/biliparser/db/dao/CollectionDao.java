@@ -22,10 +22,10 @@ public interface CollectionDao {
     List<Long> insertCollection(CollectionBean... collectionBeans);
 
     @Query("SELECT * FROM collection")
-    List<HistoryVideoBean> queryAllCollection();
+    List<CollectionBean> queryAllCollection();
 
     @Query("SELECT * FROM collection where videoId = :videoId")
-    HistoryVideoBean queryCollectionByVideoId(int videoId);
+    CollectionBean queryCollectionByVideoId(int videoId);
 
     @Query("DELETE FROM collection")
     int clearCollection();

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="45dp"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:background="@drawable/bg_strokegreen_radius4"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        >
+        <TextView
+            android:id="@+id/tv_collect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="收藏"
+            android:textSize="14sp"
+            android:textColor="@color/color_back_green"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:visibility="gone"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/color_back_green"
+            android:layout_marginTop="5dp"
+            android:visibility="gone"
+            />
+        <TextView
+            android:id="@+id/tv_clear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="清空"
+            android:textSize="14sp"
+            android:textColor="@color/color_selected_tags"
+            android:gravity="center_horizontal"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

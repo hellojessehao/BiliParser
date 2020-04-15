@@ -132,7 +132,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         spinnerPop.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         spinnerPop.setAnimationStyle(R.style.WindowStyle);
         spinnerPop.setOutsideTouchable(true);
-        spinnerPop.setWidth(SizeUtils.dp2px(45));
+        spinnerPop.setWidth(SizeUtils.dp2px(65));
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,7 +142,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                         ActivityUtils.startActivity(HistoryVideoActivity.class);
                         break;
                     case R.id.tv_collect:
-
+                        ActivityUtils.startActivity(CollectionActivity.class);
                         break;
                 }
             }
