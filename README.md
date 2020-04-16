@@ -1,6 +1,6 @@
 # BiliParser
 <h1>本项目创建初衷是用于爬取动漫网站视频资源，后续会增加除动漫以外的影视搜索。</h1><br>
-<br>使用语言：java、android
+使用语言：java、android
 <br>使用依赖库：
 <br>1.Jsoup - html解析、网页请求；
 <br>2.Room - 本地数据库；
