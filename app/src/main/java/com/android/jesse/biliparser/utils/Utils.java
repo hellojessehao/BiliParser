@@ -1,6 +1,7 @@
 package com.android.jesse.biliparser.utils;
 
 import android.app.Activity;
+import android.content.res.Resources;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -45,6 +46,14 @@ public class Utils {
             return false;
         }
         return true;
+    }
+
+    public static int getNavigationBarHeight(Activity mActivity) {
+        Resources resources = mActivity.getResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height","dimen", "android");
+        int height = resources.getDimensionPixelSize(resourceId);
+        LogUtils.i(TAG+ "getNavigationBarHeight : height = " + height);
+        return height;
     }
 
 }

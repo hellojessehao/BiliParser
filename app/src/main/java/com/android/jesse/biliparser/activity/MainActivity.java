@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Message;
@@ -18,13 +19,17 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,11 +46,13 @@ import com.android.jesse.biliparser.utils.LogUtils;
 import com.android.jesse.biliparser.utils.NetLoadListener;
 import com.android.jesse.biliparser.utils.Session;
 import com.android.jesse.biliparser.utils.SharePreferenceUtil;
+import com.android.jesse.biliparser.utils.SoftKeyBoardListener;
 import com.android.jesse.biliparser.utils.Utils;
 import com.android.jesse.biliparser.view.FlowLayout;
 import com.android.jesse.biliparser.view.TagAdapter;
 import com.android.jesse.biliparser.view.TagFlowLayout;
 import com.blankj.utilcode.util.ActivityUtils;
+import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -86,14 +93,16 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 
     @BindView(R.id.et_word)
     EditText et_word;
-    @BindView(R.id.tv_result)
-    TextView tv_result;
     @BindView(R.id.rl_search_history_container)
     RelativeLayout rl_search_history_container;
     @BindView(R.id.fl_search_history)
     TagFlowLayout fl_search_history;
     @BindView(R.id.btn_translate)
     Button btn_translate;
+    @BindView(R.id.ll_content_container)
+    LinearLayout ll_content_container;
+    @BindView(R.id.scrollView)
+    ScrollView scrollView;
 
     private WaitDialog waitDialog;
     @SuppressLint("HandlerLeak")
@@ -105,31 +114,31 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                 NetLoadListener.getInstance().stopListening();
                 waitDialog.dismiss();
                 String word = et_word.getText().toString();
-                Session.getSession().put(Constant.KEY_DOCUMENT,msg.obj);
-                Intent intent = new Intent(mContext,SearchResultDisplayActivity.class);
-                intent.putExtra(Constant.KEY_TITLE,word);
-                startActivityForResult(intent,102);
+                Session.getSession().put(Constant.KEY_DOCUMENT, msg.obj);
+                Intent intent = new Intent(mContext, SearchResultDisplayActivity.class);
+                intent.putExtra(Constant.KEY_TITLE, word);
+                startActivityForResult(intent, 102);
                 //将搜索词存缓存
                 List<String> searchWordList = getHistoryCacheList();
                 String cacheResult = "";//最终存进缓存的字符串
-                if(Utils.isListEmpty(searchWordList)){
+                if (Utils.isListEmpty(searchWordList)) {
                     searchWordList = new ArrayList<>();
                     searchWordList.add(word);
-                }else{
-                    if(!searchWordList.contains(word)){
+                } else {
+                    if (!searchWordList.contains(word)) {
                         //只显示最近15个历史搜索词
-                        if(searchWordList.size() == 15){
-                            searchWordList.remove(searchWordList.size()-1);
+                        if (searchWordList.size() == 15) {
+                            searchWordList.remove(searchWordList.size() - 1);
                         }
-                        searchWordList.add(0,word);//新词加到首位
-                    }else{
+                        searchWordList.add(0, word);//新词加到首位
+                    } else {
                         searchWordList.remove(word);
-                        searchWordList.add(0,word);//新词加到首位
+                        searchWordList.add(0, word);//新词加到首位
                     }
                 }
                 cacheResult = new Gson().toJson(searchWordList);
-                LogUtils.i(TAG+" cacheResult = "+cacheResult);
-                SharePreferenceUtil.put(Constant.SPKEY_SEARCH_HISTORY,cacheResult);
+                LogUtils.i(TAG + " cacheResult = " + cacheResult);
+                SharePreferenceUtil.put(Constant.SPKEY_SEARCH_HISTORY, cacheResult);
             }
         }
     };
@@ -165,31 +174,55 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         iv_right.setImageResource(R.mipmap.ic_main_menu);
         initSpinnerPop();
         initSearchHistory();
+        initKeyboardHeightAutoFit();
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(mContext, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 101);
         }
         waitDialog = new WaitDialog(mContext, R.style.Dialog_Translucent_Background);
     }
 
+    private void initKeyboardHeightAutoFit() {
+        SoftKeyBoardListener.setListener(this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+            @Override
+            public void keyBoardShow(int height) {
+                int scrollHeight = scrollView.getHeight();
+                int llHeight = ll_content_container.getHeight();
+                float llY = ll_content_container.getY();
+                float raiseHeight = height - (scrollHeight - llHeight - llY);
+                FrameLayout.LayoutParams llParams = (FrameLayout.LayoutParams) ll_content_container.getLayoutParams();
+                llParams.bottomMargin = (int) raiseHeight;
+                ll_content_container.setLayoutParams(llParams);
+            }
+
+            @Override
+            public void keyBoardHide(int height) {
+                FrameLayout.LayoutParams llParams = (FrameLayout.LayoutParams) ll_content_container.getLayoutParams();
+                llParams.bottomMargin = 0;
+                ll_content_container.setLayoutParams(llParams);
+            }
+        });
+
+    }
+
     //测试用，制造15条历史搜索假数据
-    private void createFakeHistory(){
+    private void createFakeHistory() {
         List<String> fakeList = new ArrayList<>();
-        for(int i=0;i<15;i++){
+        for (int i = 0; i < 15; i++) {
 //            if(i == 0){
 //                fakeList.add("爱神的箭发克里斯京东方克拉斯发多久");
 //                continue;
 //            }
-            fakeList.add("fake data "+i);
+            fakeList.add("fake data " + i);
         }
-        SharePreferenceUtil.put(Constant.SPKEY_SEARCH_HISTORY,new Gson().toJson(fakeList));
+        SharePreferenceUtil.put(Constant.SPKEY_SEARCH_HISTORY, new Gson().toJson(fakeList));
     }
 
-    private void initSearchHistory(){
+    private void initSearchHistory() {
 //        createFakeHistory();
         List<String> searchWordList = getHistoryCacheList();
-        if(Utils.isListEmpty(searchWordList)){
+        if (Utils.isListEmpty(searchWordList)) {
             rl_search_history_container.setVisibility(View.GONE);
-        }else{
+        } else {
             rl_search_history_container.setVisibility(View.VISIBLE);
             TagAdapter<String> tagAdapter = new TagAdapter<String>(searchWordList) {
                 @Override
@@ -213,15 +246,16 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         }
     }
 
-    private List<String> getHistoryCacheList(){
+    private List<String> getHistoryCacheList() {
         String searchHistory = SharePreferenceUtil.get(Constant.SPKEY_SEARCH_HISTORY);
-        LogUtils.i(TAG+" getSearchHistory : "+searchHistory);
-        return new Gson().fromJson(searchHistory,new TypeToken<List<String>>() {}.getType());
+        LogUtils.i(TAG + " getSearchHistory : " + searchHistory);
+        return new Gson().fromJson(searchHistory, new TypeToken<List<String>>() {
+        }.getType());
     }
 
-    private void initSpinnerPop(){
+    private void initSpinnerPop() {
         spinnerPop = new PopupWindow(mContext);
-        View contentView = LayoutInflater.from(mContext).inflate(R.layout.main_menu_spinner_pop,null,false);
+        View contentView = LayoutInflater.from(mContext).inflate(R.layout.main_menu_spinner_pop, null, false);
         spinnerPop.setContentView(contentView);
         spinnerPop.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         spinnerPop.setAnimationStyle(R.style.WindowStyle);
@@ -231,7 +265,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
             @Override
             public void onClick(View v) {
                 spinnerPop.dismiss();
-                switch (v.getId()){
+                switch (v.getId()) {
                     case R.id.tv_history:
                         ActivityUtils.startActivity(HistoryVideoActivity.class);
                         break;
@@ -250,10 +284,10 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     @Override
     protected void onRightClick() {
         super.onRightClick();
-        spinnerPop.showAsDropDown(iv_right,0,-SizeUtils.dp2px(8));
+        spinnerPop.showAsDropDown(iv_right, 0, -SizeUtils.dp2px(8));
     }
 
-    @OnClick({R.id.btn_translate,R.id.iv_delete})
+    @OnClick({R.id.btn_translate, R.id.iv_delete})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_delete:
@@ -262,7 +296,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                             @Override
                             public void onClick(View v) {
                                 clearHintDialog.dismiss();
-                                switch (v.getId()){
+                                switch (v.getId()) {
                                     case R.id.tv_positive:
                                         SharePreferenceUtil.remove(Constant.SPKEY_SEARCH_HISTORY);
                                         initSearchHistory();
@@ -281,16 +315,16 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        try{
+                        try {
                             NetLoadListener.getInstance().startListening(callback);
                             Connection connection = Jsoup.connect("http://www.imomoe.in/search.asp");
                             connection.userAgent(Constant.USER_AGENT_FORPC);
-                            connection.data("searchword",word);
+                            connection.data("searchword", word);
                             connection.postDataCharset("GB2312");//关键中的关键！！
                             Document document = connection.method(Connection.Method.POST).post();
-                            LogUtils.d(TAG+" html = \n"+document.outerHtml());
+                            LogUtils.d(TAG + " html = \n" + document.outerHtml());
                             mHandler.sendMessage(Message.obtain(mHandler, 0, document));
-                        }catch (IOException ioe){
+                        } catch (IOException ioe) {
                             ioe.printStackTrace();
                             waitDialog.dismiss();
                             NetLoadListener.getInstance().stopListening();
@@ -350,7 +384,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 102){
+        if (requestCode == 102) {
             initSearchHistory();
         }
     }
