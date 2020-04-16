@@ -24,10 +24,16 @@
 <br>
 <b>1.0.0版本界面展示：</b><br>
 ![image](https://github.com/hellojessehao/BiliParser/blob/master/app/src/main/res/mipmap-xxhdpi/ui1.jpg)
+
 ![image](https://github.com/hellojessehao/BiliParser/blob/master/app/src/main/res/mipmap-xxhdpi/ui2.jpg)
+
 ![image](https://github.com/hellojessehao/BiliParser/blob/master/app/src/main/res/mipmap-xxhdpi/ui3.jpg)
+
 ![image](https://github.com/hellojessehao/BiliParser/blob/master/app/src/main/res/mipmap-xxhdpi/ui4.jpg)
+
 ![image](https://github.com/hellojessehao/BiliParser/blob/master/app/src/main/res/mipmap-xxhdpi/ui5.jpg)
+
 ![image](https://github.com/hellojessehao/BiliParser/blob/master/app/src/main/res/mipmap-xxhdpi/ui6.jpg)
+
 ![image](https://github.com/hellojessehao/BiliParser/blob/master/app/src/main/res/mipmap-xxhdpi/ui7.jpg)
 
