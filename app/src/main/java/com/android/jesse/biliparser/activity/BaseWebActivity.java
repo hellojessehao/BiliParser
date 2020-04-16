@@ -118,13 +118,20 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
                 waitDialog.show();
                 contentView.setVisibility(View.VISIBLE);
                 mWebView.loadUrl(url);
-                mHandler.sendEmptyMessageDelayed(2,TIMEOUT_MILLS);//30s内js未执行完成视为超时
+                mHandler.postDelayed(timeoutRunnable,TIMEOUT_MILLS);
             }
             if(needWaitParse){
                 parseHtmlFromUrl();
             }
         }
     }
+
+    private Runnable timeoutRunnable = new Runnable() {
+        @Override
+        public void run() {
+            mHandler.sendEmptyMessage(2);//30s内js未执行完成视为超时
+        }
+    };
 
     @JavascriptInterface
     private void initWebView() {
@@ -324,6 +331,7 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
         @JavascriptInterface
         public void onJSLoadComplete(){
             LogUtils.d(TAG+" onJSLoadComplete...");
+            mHandler.removeCallbacks(timeoutRunnable);
             waitDialog.dismiss();
             contentView.setVisibility(View.GONE);
             mWebView.setVisibility(View.VISIBLE);

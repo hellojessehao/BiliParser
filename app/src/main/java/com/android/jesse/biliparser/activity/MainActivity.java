@@ -248,7 +248,6 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 
     private List<String> getHistoryCacheList() {
         String searchHistory = SharePreferenceUtil.get(Constant.SPKEY_SEARCH_HISTORY);
-        LogUtils.i(TAG + " getSearchHistory : " + searchHistory);
         return new Gson().fromJson(searchHistory, new TypeToken<List<String>>() {
         }.getType());
     }
@@ -322,7 +321,6 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                             connection.data("searchword", word);
                             connection.postDataCharset("GB2312");//关键中的关键！！
                             Document document = connection.method(Connection.Method.POST).post();
-                            LogUtils.d(TAG + " html = \n" + document.outerHtml());
                             mHandler.sendMessage(Message.obtain(mHandler, 0, document));
                         } catch (IOException ioe) {
                             ioe.printStackTrace();

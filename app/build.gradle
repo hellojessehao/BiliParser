@@ -83,4 +83,7 @@ dependencies {
     }
     annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
     //@}
+    //@{下拉刷新 下拉加载
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.2'  //1.0.5及以前版本的老用户升级需谨慎，API改动过大
+    //@}
 }
