@@ -8,7 +8,7 @@
 <br>4.SmartRefreshLayout - 上拉加载、下拉刷新；
 <br>5.butterKnife - 快捷声明控件、控件点击事件；
 <br>6.logger - 打印更长更完整的日志；
-<br>7.gson - 超好用的json解析工具。<b>
+<br>7.gson - 超好用的json解析工具。</b>
 
 <b>更新日志：</b>
 <br>2020/4/16：
