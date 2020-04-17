@@ -59,6 +59,9 @@
                     android:textSize="14sp"
                     android:textColor="@color/color_subtext_subtitle"
                     android:text=""
+                    android:maxEms="8"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     />
 
                 <TextView
@@ -86,6 +89,9 @@
                     android:textSize="14sp"
                     android:textColor="@color/color_subtext_subtitle"
                     android:text=""
+                    android:maxEms="8"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     />
 
                 <TextView
@@ -113,6 +119,9 @@
                     android:textSize="14sp"
                     android:textColor="@color/color_subtext_subtitle"
                     android:text=""
+                    android:maxEms="8"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     />
 
                 <TextView
@@ -120,13 +129,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/iv_cover"
-                    android:layout_alignParentBottom="true"
                     android:layout_marginStart="10dp"
-                    android:maxLines="1"
+                    android:maxLines="2"
                     android:ellipsize="end"
                     android:textSize="14sp"
                     android:textColor="@color/color_subtext_subtitle"
                     android:text=""
+                    android:layout_below="@id/tv_indexes"
+                    android:layout_marginTop="5dp"
                     />
 
             </RelativeLayout>

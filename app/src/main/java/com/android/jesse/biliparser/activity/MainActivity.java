@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -103,6 +104,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     LinearLayout ll_content_container;
     @BindView(R.id.scrollView)
     ScrollView scrollView;
+    @BindView(R.id.tv_select_search_type)
+    TextView tv_select_search_type;
 
     private WaitDialog waitDialog;
     @SuppressLint("HandlerLeak")
@@ -111,34 +114,9 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == 0) {
-                NetLoadListener.getInstance().stopListening();
-                waitDialog.dismiss();
-                String word = et_word.getText().toString();
-                Session.getSession().put(Constant.KEY_DOCUMENT, msg.obj);
-                Intent intent = new Intent(mContext, SearchResultDisplayActivity.class);
-                intent.putExtra(Constant.KEY_TITLE, word);
-                startActivityForResult(intent, 102);
-                //将搜索词存缓存
-                List<String> searchWordList = getHistoryCacheList();
-                String cacheResult = "";//最终存进缓存的字符串
-                if (Utils.isListEmpty(searchWordList)) {
-                    searchWordList = new ArrayList<>();
-                    searchWordList.add(word);
-                } else {
-                    if (!searchWordList.contains(word)) {
-                        //只显示最近15个历史搜索词
-                        if (searchWordList.size() == 15) {
-                            searchWordList.remove(searchWordList.size() - 1);
-                        }
-                        searchWordList.add(0, word);//新词加到首位
-                    } else {
-                        searchWordList.remove(word);
-                        searchWordList.add(0, word);//新词加到首位
-                    }
-                }
-                cacheResult = new Gson().toJson(searchWordList);
-                LogUtils.i(TAG + " cacheResult = " + cacheResult);
-                SharePreferenceUtil.put(Constant.SPKEY_SEARCH_HISTORY, cacheResult);
+                toNextPage(msg);
+            }else if(msg.what == 1){
+                toNextPage(msg);
             }
         }
     };
@@ -151,6 +129,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     };
     private PopupWindow spinnerPop;
     private Dialog clearHintDialog;
+    private int searchType = Constant.FLAG_SEARCH_ANIM;
+    private PopupWindow selectTypePop;
 
     @Override
     protected String getTitleName() {
@@ -169,16 +149,59 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 
     @Override
     protected void initEventAndData() {
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         iv_back.setVisibility(View.GONE);
         iv_right.setVisibility(View.VISIBLE);
         iv_right.setImageResource(R.mipmap.ic_main_menu);
+        searchType = SharePreferenceUtil.getInt(Constant.SPKEY_SEARCH_TYPE,Constant.FLAG_SEARCH_ANIM);
+        if(searchType == Constant.FLAG_SEARCH_ANIM){
+            tv_select_search_type.setText("搜动漫");
+        }else if(searchType == Constant.FLAG_SEARCH_FILM_TELEVISION){
+            tv_select_search_type.setText("搜影视");
+        }
         initSpinnerPop();
+        initSearchTypePop();
         initSearchHistory();
         initKeyboardHeightAutoFit();
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(mContext, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 101);
         }
         waitDialog = new WaitDialog(mContext, R.style.Dialog_Translucent_Background);
+    }
+
+    /**
+     * 跳转下一页
+     */
+    private void toNextPage(Message msg){
+        NetLoadListener.getInstance().stopListening();
+        waitDialog.dismiss();
+        String word = et_word.getText().toString();
+        Session.getSession().put(Constant.KEY_DOCUMENT, msg.obj);
+        Intent intent = new Intent(mContext, SearchResultDisplayActivity.class);
+        intent.putExtra(Constant.KEY_TITLE, word);
+        intent.putExtra(Constant.KEY_SEARCH_TYPE,searchType);
+        startActivityForResult(intent, 102);
+        //将搜索词存缓存
+        List<String> searchWordList = getHistoryCacheList();
+        String cacheResult = "";//最终存进缓存的字符串
+        if (Utils.isListEmpty(searchWordList)) {
+            searchWordList = new ArrayList<>();
+            searchWordList.add(word);
+        } else {
+            if (!searchWordList.contains(word)) {
+                //只显示最近15个历史搜索词
+                if (searchWordList.size() == 15) {
+                    searchWordList.remove(searchWordList.size() - 1);
+                }
+                searchWordList.add(0, word);//新词加到首位
+            } else {
+                searchWordList.remove(word);
+                searchWordList.add(0, word);//新词加到首位
+            }
+        }
+        cacheResult = new Gson().toJson(searchWordList);
+        LogUtils.i(TAG + " cacheResult = " + cacheResult);
+        SharePreferenceUtil.put(Constant.SPKEY_SEARCH_HISTORY, cacheResult);
     }
 
     private void initKeyboardHeightAutoFit() {
@@ -252,6 +275,47 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         }.getType());
     }
 
+    private void initSearchTypePop(){
+        selectTypePop = new PopupWindow(mContext);
+        View contentView = LayoutInflater.from(mContext).inflate(R.layout.select_search_type_pop, null, false);
+        selectTypePop.setContentView(contentView);
+        selectTypePop.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        selectTypePop.setAnimationStyle(R.style.WindowStyle);
+        selectTypePop.setOutsideTouchable(true);
+        selectTypePop.setWidth(SizeUtils.dp2px(55));
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectTypePop.dismiss();
+                tv_select_search_type.setCompoundDrawablesWithIntrinsicBounds(0,0,R.mipmap.ic_arrow_down_deep,0);
+                switch (v.getId()){
+                    case R.id.tv_anim:
+                        searchType = Constant.FLAG_SEARCH_ANIM;
+                        tv_select_search_type.setText("搜动漫");
+                        et_word.setHint(R.string.et_hint_text_for_anim);
+                        SharePreferenceUtil.put(Constant.SPKEY_SEARCH_TYPE,searchType);
+                        break;
+                    case R.id.tv_film_television:
+                        searchType = Constant.FLAG_SEARCH_FILM_TELEVISION;
+                        tv_select_search_type.setText("搜影视");
+                        et_word.setHint(R.string.et_hint_text_for_films_television);
+                        SharePreferenceUtil.put(Constant.SPKEY_SEARCH_TYPE,searchType);
+                        break;
+                }
+            }
+        };
+        TextView tv_anim = contentView.findViewById(R.id.tv_anim);
+        tv_anim.setOnClickListener(onClickListener);
+        TextView tv_film_television = contentView.findViewById(R.id.tv_film_television);
+        tv_film_television.setOnClickListener(onClickListener);
+        selectTypePop.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                tv_select_search_type.setCompoundDrawablesWithIntrinsicBounds(0,0,R.mipmap.ic_arrow_down_deep,0);
+            }
+        });
+    }
+
     private void initSpinnerPop() {
         spinnerPop = new PopupWindow(mContext);
         View contentView = LayoutInflater.from(mContext).inflate(R.layout.main_menu_spinner_pop, null, false);
@@ -286,9 +350,13 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         spinnerPop.showAsDropDown(iv_right, 0, -SizeUtils.dp2px(8));
     }
 
-    @OnClick({R.id.btn_translate, R.id.iv_delete})
+    @OnClick({R.id.btn_translate, R.id.iv_delete,R.id.tv_select_search_type})
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.tv_select_search_type:
+                tv_select_search_type.setCompoundDrawablesWithIntrinsicBounds(0,0,R.mipmap.ic_arrow_up_deep,0);
+                selectTypePop.showAsDropDown(tv_select_search_type,0,SizeUtils.dp2px(3));
+                break;
             case R.id.iv_delete:
                 clearHintDialog = DialogUtil.showHintDialogForCommonVersion(mContext, "确定要清空搜索历史吗？", "确定", "算了",
                         new View.OnClickListener() {
@@ -316,12 +384,25 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                     public void run() {
                         try {
                             NetLoadListener.getInstance().startListening(callback);
-                            Connection connection = Jsoup.connect("http://www.imomoe.in/search.asp");
-                            connection.userAgent(Constant.USER_AGENT_FORPC);
-                            connection.data("searchword", word);
-                            connection.postDataCharset("GB2312");//关键中的关键！！
-                            Document document = connection.method(Connection.Method.POST).post();
-                            mHandler.sendMessage(Message.obtain(mHandler, 0, document));
+
+                            switch (searchType){
+                                case Constant.FLAG_SEARCH_ANIM:
+                                    Connection connection = Jsoup.connect(Constant.SAKURA_NEXT_PAGE_BASE_URL);
+                                    connection.userAgent(Constant.USER_AGENT_FORPC);
+                                    connection.data("searchword", word);
+                                    connection.postDataCharset("GB2312");//关键中的关键！！
+                                    Document document = connection.method(Connection.Method.POST).post();
+                                    mHandler.sendMessage(Message.obtain(mHandler, 0, document));
+                                    break;
+                                case Constant.FLAG_SEARCH_FILM_TELEVISION:
+                                    Connection filmConnection = Jsoup.connect(Constant.JIJI_SEARCH_URL);
+                                    filmConnection.userAgent(Constant.USER_AGENT_FORPC);
+                                    filmConnection.data("wd", word);
+                                    Document filmDocument = filmConnection.method(Connection.Method.POST).post();
+                                    mHandler.sendMessage(Message.obtain(mHandler, 1, filmDocument));
+                                    break;
+                            }
+
                         } catch (IOException ioe) {
                             ioe.printStackTrace();
                             waitDialog.dismiss();

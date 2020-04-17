@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal">
+
+    <LinearLayout
+        android:layout_width="55dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:background="@drawable/bg_strokegreen_radius4"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp">
+        <TextView
+            android:id="@+id/tv_anim"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="搜动漫"
+            android:textSize="12sp"
+            android:textColor="@color/color_back_green"
+            android:gravity="center_horizontal"
+            android:visibility="visible"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/color_back_green"
+            android:layout_marginTop="6dp"
+            android:visibility="visible"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="3dp"
+            />
+        <TextView
+            android:id="@+id/tv_film_television"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="搜影视"
+            android:textSize="12sp"
+            android:textColor="@color/color_back_green"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="6dp"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

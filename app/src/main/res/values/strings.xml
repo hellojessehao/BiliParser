@@ -2,4 +2,6 @@
     <string name="app_name">BiliParser</string>
     <string name="set_video_height_js">javascript:window.customScript.log(\'===setVideoSize start===\');var iframe = document.getElementsByTagName(\'iframe\')[0];iframe.setAttribute(\'height\',\'%1$dpx\');window.customScript.log(\'===setVideoSize finished===\');</string>
     <string name="net_load_failed">啊喔~加载失败了，请重试~</string>
+    <string name="et_hint_text_for_anim">输入想看的动漫名称，如海贼王~。~</string>
+    <string name="et_hint_text_for_films_television">输入想看的影视剧名称，如鬼吹灯~。~</string>
 </resources>

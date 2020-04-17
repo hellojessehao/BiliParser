@@ -15,6 +15,8 @@ public class Constant {
     public static final String BILI_SEARCH_URL = "https://search.bilibili.com/";//后面拼接上想要搜索的内容 https://search.bilibili.com/all?keyword=
     public static final String SAKURA_SEARCH_URL = "http://www.imomoe.in/";//樱花动漫搜索链接
     public static final String SAKURA_NEXT_PAGE_BASE_URL = "http://www.imomoe.in/search.asp";//樱花动漫下一页基础链接
+    public static final String JIJI_SEARCH_URL = "https://www.jijidy.com/index.php?m=vod-search";//吉吉影视搜索接口 搜索词放进wd参数
+    public static final String JIJI_BASE_URL = "https://www.jijidy.com/";
     //@}
 
     //@{paths
@@ -32,6 +34,8 @@ public class Constant {
     public final static int GET_SMS_SUCCESS = 80002;//验证码已发送
     public final static int GET_SMS_FAILED = 80003;//验证码发送失败
     public static final int REQUEST_CAMERA_PERMISSION = 103;
+    public static final int FLAG_SEARCH_ANIM = 1;
+    public static final int FLAG_SEARCH_FILM_TELEVISION = 2;
     //@}
 
     //@{String常量
@@ -41,13 +45,14 @@ public class Constant {
     public static final String KEY_DOCUMENT = "KEY_DOCUMENT";
     public static final String KEY_TITLE = "key_title";
     public static final String KEY_URL = "key_url";
+    public static final String KEY_SEARCH_TYPE = "key_search_type";
     public static final String KEY_NEED_WAIT_PARSE = "key_need_wait_parse";
     public static final String USER_AGENT_FORPC = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36";
     public static final String KEY_RESULT_BEAN = "key_result_bean";
     public static final String KEY_CURRENT_INDEX = "key_current_index";//当前集数非序号 不用+1
     public static final String KEY_VIDEO_ID = "key_video_id";
     public static final String SPKEY_SEARCH_HISTORY = "spkey_search_history";
-    public static final String SEARCH_HISTORY_SPLIT = ",";//搜索历史字段间分隔符
+    public static final String SPKEY_SEARCH_TYPE = "spkey_search_type";
     //@}
 
     //@{BROADCAST ACTIONS

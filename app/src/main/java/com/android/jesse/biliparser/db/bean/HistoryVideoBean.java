@@ -2,6 +2,11 @@ package com.android.jesse.biliparser.db.bean;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
+
+import com.android.jesse.biliparser.utils.ListConvert;
+
+import java.util.List;
 
 /**
  * @Description:
@@ -9,6 +14,7 @@ import android.arch.persistence.room.PrimaryKey;
  * @date: 2020/4/8
  */
 @Entity(tableName = "HistoryVideo")
+@TypeConverters(ListConvert.class)
 public class HistoryVideoBean {
 
     @PrimaryKey
@@ -21,6 +27,80 @@ public class HistoryVideoBean {
     private String alias;
     private String desc;
     private String date;//观看日期
+    //film新增@{
+    private String sectionCount;//集数
+    private List<String> directorList;
+    private List<String> actorList;
+    private String type;
+    private String area;
+    private String publishDate;
+    private String updateDate;
+    private String score;//评分
+    //@}
+
+    public String getSectionCount() {
+        return sectionCount;
+    }
+
+    public void setSectionCount(String sectionCount) {
+        this.sectionCount = sectionCount;
+    }
+
+    public List<String> getDirectorList() {
+        return directorList;
+    }
+
+    public void setDirectorList(List<String> directorList) {
+        this.directorList = directorList;
+    }
+
+    public List<String> getActorList() {
+        return actorList;
+    }
+
+    public void setActorList(List<String> actorList) {
+        this.actorList = actorList;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getPublishDate() {
+        return publishDate;
+    }
+
+    public void setPublishDate(String publishDate) {
+        this.publishDate = publishDate;
+    }
+
+    public String getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public String getScore() {
+        return score;
+    }
+
+    public void setScore(String score) {
+        this.score = score;
+    }
 
     public int getVideoId() {
         return videoId;
@@ -106,6 +186,14 @@ public class HistoryVideoBean {
                 ", alias='" + alias + '\'' +
                 ", desc='" + desc + '\'' +
                 ", date='" + date + '\'' +
+                ", sectionCount='" + sectionCount + '\'' +
+                ", directorList=" + directorList +
+                ", actorList=" + actorList +
+                ", type='" + type + '\'' +
+                ", area='" + area + '\'' +
+                ", publishDate='" + publishDate + '\'' +
+                ", updateDate='" + updateDate + '\'' +
+                ", score='" + score + '\'' +
                 '}';
     }
 }

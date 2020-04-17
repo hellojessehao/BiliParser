@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <com.android.jesse.biliparser.components.ImageViewRoundRect
+        android:id="@+id/iv_cover"
+        android:layout_width="120dp"
+        android:layout_height="match_parent"
+        android:src="@mipmap/emptyalbum"
+        android:scaleType="fitXY"
+        app:roundRadius="8"
+        app:type="1"
+        />
+
+    <TextView
+        android:id="@+id/tv_section_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="已更新到10集"
+        android:layout_alignEnd="@id/iv_cover"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:padding="3dp"
+        android:background="@drawable/bg_black30_topright_radius8"
+        />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/iv_cover"
+        android:layout_marginStart="10dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textSize="16sp"
+        android:textColor="@color/color_maintext_title"
+        android:text="阿凡达"
+        />
+
+    <TextView
+        android:id="@+id/tv_area"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/iv_cover"
+        android:layout_below="@id/tv_title"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:textSize="14sp"
+        android:textColor="@color/color_subtext_subtitle"
+        android:text="地区：日本"
+        android:maxEms="8"
+        android:maxLines="1"
+        android:ellipsize="end"
+        />
+
+    <TextView
+        android:id="@+id/tv_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/tv_area"
+        android:layout_alignParentEnd="true"
+        android:textSize="14sp"
+        android:textColor="@color/color_subtext_subtitle"
+        android:text="类型：科幻片"
+        android:maxEms="8"
+        android:maxLines="1"
+        android:ellipsize="end"
+        />
+
+    <TextView
+        android:id="@+id/tv_publish_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/iv_cover"
+        android:layout_below="@id/tv_area"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:textSize="14sp"
+        android:textColor="@color/color_subtext_subtitle"
+        android:text="上映：2000年"
+        android:maxEms="8"
+        android:maxLines="1"
+        android:ellipsize="end"
+        />
+
+    <TextView
+        android:id="@+id/tv_update_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/tv_publish_time"
+        android:layout_alignParentEnd="true"
+        android:textSize="14sp"
+        android:textColor="@color/color_subtext_subtitle"
+        android:text="更新：2009年"
+        android:maxEms="8"
+        android:maxLines="1"
+        android:ellipsize="end"
+        />
+
+    <TextView
+        android:id="@+id/tv_director"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/iv_cover"
+        android:layout_below="@id/tv_publish_time"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:textSize="14sp"
+        android:textColor="@color/color_subtext_subtitle"
+        android:text="导演：冯小刚"
+        android:maxEms="8"
+        android:maxLines="1"
+        android:ellipsize="end"
+        />
+
+    <TextView
+        android:id="@+id/tv_actor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_publish_time"
+        android:layout_marginTop="10dp"
+        android:textSize="14sp"
+        android:textColor="@color/color_subtext_subtitle"
+        android:text="主演：阿凡达本人"
+        android:layout_alignParentEnd="true"
+        android:maxEms="8"
+        android:maxLines="1"
+        android:ellipsize="end"
+        />
+
+    <TextView
+        android:id="@+id/tv_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/iv_cover"
+        android:layout_marginStart="10dp"
+        android:layout_below="@id/tv_director"
+        android:layout_marginTop="20dp"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:textSize="12sp"
+        android:textColor="@color/color_subtext_subtitle"
+        android:text="该片讲述了一个神奇的故事~该片讲述了一个神奇的故事~该片讲述了一个神奇的故事~该片讲述了一个神奇的故事~该片讲述了一个神奇的故事~"
+        />
+
+
+</RelativeLayout>

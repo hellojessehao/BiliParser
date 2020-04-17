@@ -1,5 +1,7 @@
 package com.android.jesse.biliparser.network.model.bean;
 
+import java.util.List;
+
 /**
  * @Description: 搜索结果数据
  * @author: zhangshihao
@@ -12,7 +14,18 @@ public class SearchResultBean {
     private String title;
     private String infos;
     private String alias;
-    private String desc;
+    private String desc;//剧情简介
+    //film新增@{
+    private String sectionCount;//集数
+    private List<String> directorList;
+    private List<String> actorList;
+    private String type;
+    private String area;
+    private String publishDate;
+    private String updateDate;
+    private String score;//评分
+    //@}
+
 
     public String getUrl() {
         return url;
@@ -62,6 +75,70 @@ public class SearchResultBean {
         this.desc = desc;
     }
 
+    public String getSectionCount() {
+        return sectionCount;
+    }
+
+    public void setSectionCount(String sectionCount) {
+        this.sectionCount = sectionCount;
+    }
+
+    public List<String> getDirectorList() {
+        return directorList;
+    }
+
+    public void setDirectorList(List<String> directorList) {
+        this.directorList = directorList;
+    }
+
+    public List<String> getActorList() {
+        return actorList;
+    }
+
+    public void setActorList(List<String> actorList) {
+        this.actorList = actorList;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getPublishDate() {
+        return publishDate;
+    }
+
+    public void setPublishDate(String publishDate) {
+        this.publishDate = publishDate;
+    }
+
+    public String getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public String getScore() {
+        return score;
+    }
+
+    public void setScore(String score) {
+        this.score = score;
+    }
+
     @Override
     public String toString() {
         return "SearchResultBean{" +
@@ -71,6 +148,14 @@ public class SearchResultBean {
                 ", infos='" + infos + '\'' +
                 ", alias='" + alias + '\'' +
                 ", desc='" + desc + '\'' +
+                ", sectionCount='" + sectionCount + '\'' +
+                ", directorList=" + directorList +
+                ", actorList=" + actorList +
+                ", type='" + type + '\'' +
+                ", area='" + area + '\'' +
+                ", publishDate='" + publishDate + '\'' +
+                ", updateDate='" + updateDate + '\'' +
+                ", score='" + score + '\'' +
                 '}';
     }
 }
