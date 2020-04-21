@@ -83,4 +83,14 @@ public class WaitDialog extends Dialog {
         }
     }
 
+    public void setMessage(int resId){
+        if(waitView == null){
+            return;
+        }
+        TextView tipTextView = waitView.findViewById(R.id.tipTextView);
+        if(tipTextView != null){
+            tipTextView.setText(resId);
+        }
+    }
+
 }

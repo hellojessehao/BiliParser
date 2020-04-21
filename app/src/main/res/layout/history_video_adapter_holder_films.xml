@@ -111,7 +111,7 @@
         android:textSize="14sp"
         android:textColor="@color/color_subtext_subtitle"
         android:text="导演：冯小刚"
-        android:maxEms="6"
+        android:maxEms="8"
         android:maxLines="1"
         android:ellipsize="end"
         />
@@ -126,7 +126,7 @@
         android:textColor="@color/color_subtext_subtitle"
         android:text="主演：阿凡达本人"
         android:layout_alignParentEnd="true"
-        android:maxEms="6"
+        android:maxEms="8"
         android:maxLines="1"
         android:ellipsize="end"
         />
@@ -140,10 +140,10 @@
         android:layout_below="@id/tv_director"
         android:layout_marginTop="20dp"
         android:ellipsize="end"
-        android:maxLines="3"
         android:textSize="12sp"
         android:textColor="@color/color_subtext_subtitle"
         android:text="该片讲述了一个神奇的故事~该片讲述了一个神奇的故事~该片讲述了一个神奇的故事~该片讲述了一个神奇的故事~该片讲述了一个神奇的故事~"
+        android:lineSpacingMultiplier="1.2"
         />
 
 

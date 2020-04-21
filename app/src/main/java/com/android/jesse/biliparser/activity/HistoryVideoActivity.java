@@ -17,7 +17,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.PopupWindow;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -127,7 +126,7 @@ public class HistoryVideoActivity extends SimpleActivity {
 
     @Override
     protected int getLayout() {
-        return R.layout.play_history_activity;
+        return R.layout.history_video_activity;
     }
 
     @Override
@@ -150,11 +149,23 @@ public class HistoryVideoActivity extends SimpleActivity {
                 searchResultBean.setTitle(videoBean.getTitle());
                 searchResultBean.setCover(videoBean.getCover());
                 searchResultBean.setUrl(videoBean.getUrl());
+                //@{新增字段
+                searchResultBean.setSectionCount(videoBean.getSectionCount());
+                searchResultBean.setDirectorList(videoBean.getDirectorList());
+                searchResultBean.setActorList(videoBean.getActorList());
+                searchResultBean.setType(videoBean.getType());
+                searchResultBean.setArea(videoBean.getArea());
+                searchResultBean.setPublishDate(videoBean.getPublishDate());
+                searchResultBean.setUpdateDate(videoBean.getUpdateDate());
+                searchResultBean.setScore(videoBean.getScore());
+                searchResultBean.setSearchType(videoBean.getSearchType());
+                //@}
                 Session.getSession().put(Constant.KEY_RESULT_BEAN,searchResultBean);
                 Intent intent = new Intent(mContext,ChooseSectionActivity.class);
                 intent.putExtra(Constant.KEY_TITLE,videoBean.getTitle());
                 intent.putExtra(Constant.KEY_URL,videoBean.getUrl());
                 intent.putExtra(Constant.KEY_CURRENT_INDEX,videoBean.getCurrentIndex());
+                intent.putExtra(Constant.KEY_SEARCH_TYPE,videoBean.getSearchType());
                 startActivity(intent);
             }
 

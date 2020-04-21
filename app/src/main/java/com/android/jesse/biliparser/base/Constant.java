@@ -53,6 +53,7 @@ public class Constant {
     public static final String KEY_VIDEO_ID = "key_video_id";
     public static final String SPKEY_SEARCH_HISTORY = "spkey_search_history";
     public static final String SPKEY_SEARCH_TYPE = "spkey_search_type";
+    public static final String KEY_SECTION_BEAN_LIST = "key_section_bean_list";
     //@}
 
     //@{BROADCAST ACTIONS

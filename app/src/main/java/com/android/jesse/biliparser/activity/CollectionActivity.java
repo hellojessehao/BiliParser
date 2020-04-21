@@ -140,11 +140,23 @@ public class CollectionActivity extends SimpleActivity {
                 searchResultBean.setTitle(collectionBean.getTitle());
                 searchResultBean.setCover(collectionBean.getCover());
                 searchResultBean.setUrl(collectionBean.getUrl());
+                //@{新增字段
+                searchResultBean.setSectionCount(collectionBean.getSectionCount());
+                searchResultBean.setDirectorList(collectionBean.getDirectorList());
+                searchResultBean.setActorList(collectionBean.getActorList());
+                searchResultBean.setType(collectionBean.getType());
+                searchResultBean.setArea(collectionBean.getArea());
+                searchResultBean.setPublishDate(collectionBean.getPublishDate());
+                searchResultBean.setUpdateDate(collectionBean.getUpdateDate());
+                searchResultBean.setScore(collectionBean.getScore());
+                searchResultBean.setSearchType(collectionBean.getSearchType());
+                //@}
                 Session.getSession().put(Constant.KEY_RESULT_BEAN,searchResultBean);
                 Intent intent = new Intent(mContext,ChooseSectionActivity.class);
                 intent.putExtra(Constant.KEY_TITLE,collectionBean.getTitle());
                 intent.putExtra(Constant.KEY_URL,collectionBean.getUrl());
                 intent.putExtra(Constant.KEY_CURRENT_INDEX,collectionBean.getCurrentIndex());
+                intent.putExtra(Constant.KEY_SEARCH_TYPE,collectionBean.getSearchType());
                 startActivityForResult(intent,101);
             }
 

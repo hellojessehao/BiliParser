@@ -1,49 +1,56 @@
 package com.android.jesse.biliparser.activity;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.pm.ActivityInfo;
 import android.content.res.AssetManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.android.jesse.biliparser.R;
 import com.android.jesse.biliparser.base.Constant;
 import com.android.jesse.biliparser.components.WaitDialog;
 import com.android.jesse.biliparser.network.base.SimpleActivity;
+import com.android.jesse.biliparser.network.model.bean.SectionBean;
 import com.android.jesse.biliparser.network.util.ToastUtil;
 import com.android.jesse.biliparser.utils.LogUtils;
+import com.android.jesse.biliparser.utils.Session;
 import com.android.jesse.biliparser.utils.Utils;
 import com.blankj.utilcode.util.SizeUtils;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -78,7 +85,19 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
     protected String url;
     private boolean needWaitParse = false;
     private WaitDialog waitDialog;
-    private final int TIMEOUT_MILLS = 30*1000;
+    private final int TIMEOUT_MILLS = 60*1000;
+    private int searchType = Constant.FLAG_SEARCH_ANIM;
+    private PopupWindow spinnerPop;
+    private List<SectionBean> sectionBeanList;
+    private int currentIndex = 0;//当前集数序号
+    private final int NO_SWITCH = 0;
+    private final int SWITCH_TO_LAST = 1;//切换上集
+    private final int SWITCH_TO_NEXT = 2; //切换上集
+    private final int SWITCH_TO_X = 3;//跳集
+    private int FLAG_SWITCH_SECTION = NO_SWITCH;//没有换集
+    private Dialog jumpSectionDialog;
+    private int tempJumpIndex = -1;
+    private String switchUrl;//换集url
 
     private boolean enableProgressBar = false;//是否显示进度条
     @SuppressLint("HandlerLeak")
@@ -92,6 +111,33 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
             }else if(msg.what == 2){
                 waitDialog.dismiss();
                 ToastUtil.shortShow("加载超时，可继续等待或退出重试~");
+            }else if(msg.what == 3){
+                contentView.setVisibility(View.GONE);
+                mWebView.setVisibility(View.VISIBLE);
+                tv_no_data.setVisibility(View.GONE);
+            }else if(msg.what == 4){
+                contentView.setVisibility(View.GONE);
+                mWebView.setVisibility(View.GONE);
+                tv_no_data.setText("暂不支持该视频的播放，看看其它的吧~");
+                tv_no_data.setVisibility(View.VISIBLE);
+            }else if(msg.what == 5){
+                switch (FLAG_SWITCH_SECTION){
+                    case NO_SWITCH:
+                        //do nothing
+                        break;
+                    case SWITCH_TO_LAST:
+                        currentIndex--;
+                        tv_title.setText("第"+(currentIndex+1)+"集");
+                        break;
+                    case SWITCH_TO_NEXT:
+                        currentIndex++;
+                        tv_title.setText("第"+(currentIndex+1)+"集");
+                        break;
+                    case SWITCH_TO_X:
+                        currentIndex = tempJumpIndex;
+                        tv_title.setText("第"+(currentIndex+1)+"集");
+                        break;
+                }
             }
         }
     };
@@ -102,15 +148,36 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
     }
 
     @Override
+    protected void onRightClick() {
+        super.onRightClick();
+        spinnerPop.showAsDropDown(iv_right,0,-SizeUtils.dp2px(12));
+    }
+
+    @Override
     protected void initEventAndData() {
         Utils.setDarkStatusBar(mContext);
         initWebView();
-
+        initSpinnerPop();
+        initJumpSectionDialog();
+        sectionBeanList = (List<SectionBean>)Session.getSession().get(Constant.KEY_SECTION_BEAN_LIST);
+        if(Utils.isListEmpty(sectionBeanList)){
+            LogUtils.e(TAG+" sectionBeanList is empty");
+            iv_right.setVisibility(View.GONE);
+        }else{
+            iv_right.setVisibility(View.VISIBLE);
+            iv_right.setImageResource(R.mipmap.ic_menu);
+        }
         if(getIntent() != null){
             title = getIntent().getStringExtra(Constant.KEY_TITLE);
             url = getIntent().getStringExtra(Constant.KEY_URL);
+            currentIndex = getIntent().getIntExtra(Constant.KEY_CURRENT_INDEX,0);
+            LogUtils.d(TAG+" currentIndex = "+currentIndex);
             needWaitParse = getIntent().getBooleanExtra(Constant.KEY_NEED_WAIT_PARSE,false);
             waitDialog = new WaitDialog(mContext,R.style.Dialog_Translucent_Background);
+            searchType = getIntent().getIntExtra(Constant.KEY_SEARCH_TYPE,Constant.FLAG_SEARCH_ANIM);
+            if(searchType == Constant.FLAG_SEARCH_FILM_TELEVISION){
+                waitDialog.setMessage(R.string.films_waiting_hint);
+            }
             if(!TextUtils.isEmpty(title)){
                 tv_title.setText(title);
             }
@@ -126,6 +193,111 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
         }
     }
 
+    private void initJumpSectionDialog(){
+        jumpSectionDialog = new Dialog(mContext,R.style.Dialog_Translucent_Background);
+        View contentView = LayoutInflater.from(mContext).inflate(R.layout.webview_jump_section_dialog,null,false);
+        jumpSectionDialog.setContentView(contentView);
+        EditText et_section_num = contentView.findViewById(R.id.et_section_num);
+        TextView tv_positive = contentView.findViewById(R.id.tv_positive);
+        TextView tv_negative = contentView.findViewById(R.id.tv_negative);
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String number = et_section_num.getText().toString();
+                switch (v.getId()){
+                    case R.id.tv_positive:
+                        if(TextUtils.isEmpty(number)){
+                            LogUtils.e(TAG+" jump number is null");
+                            Toast.makeText(BaseWebActivity.this, "请输入跳转集数~", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        tempJumpIndex = Integer.valueOf(number) - 1;
+                        LogUtils.d(TAG+" tempJumpIndex = "+tempJumpIndex);
+                        if(tempJumpIndex > (sectionBeanList.size()-1) || tempJumpIndex < 0){
+                            tempJumpIndex = -1;
+                            Toast.makeText(BaseWebActivity.this, "请输入正确的数值~", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                        SectionBean jumpSectionBean = sectionBeanList.get(tempJumpIndex);
+                        LogUtils.d(TAG+" jumpUrl = "+jumpSectionBean.getUrl());
+                        switchUrl = jumpSectionBean.getUrl();
+                        mWebView.loadUrl(switchUrl);
+                        jumpSectionDialog.dismiss();
+                        waitDialog.show();
+                        mHandler.postDelayed(timeoutRunnable,TIMEOUT_MILLS);
+                        break;
+                    case R.id.tv_negative:
+                        jumpSectionDialog.dismiss();
+                        break;
+                }
+            }
+        };
+        tv_positive.setOnClickListener(onClickListener);
+        tv_negative.setOnClickListener(onClickListener);
+    }
+
+    private void initSpinnerPop(){
+        spinnerPop = new PopupWindow(mContext);
+        View contentView = LayoutInflater.from(mContext).inflate(R.layout.webview_menu_spinner_pop,null,false);
+        spinnerPop.setContentView(contentView);
+        spinnerPop.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        spinnerPop.setAnimationStyle(R.style.WindowStyle);
+        spinnerPop.setOutsideTouchable(true);
+        spinnerPop.setWidth(SizeUtils.dp2px(65));
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LogUtils.d(TAG+" onclick : currentIndex = "+currentIndex);
+                spinnerPop.dismiss();
+                switch (v.getId()){
+                    case R.id.tv_last:
+                        if(currentIndex <= 0){
+                            Toast.makeText(BaseWebActivity.this, "这好像是第一集~", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                        FLAG_SWITCH_SECTION = SWITCH_TO_LAST;
+                        SectionBean lastSectionBean = sectionBeanList.get(currentIndex-1);
+                        LogUtils.d(TAG+" lastUrl = "+lastSectionBean.getUrl());
+                        switchUrl = lastSectionBean.getUrl();
+                        mWebView.loadUrl(switchUrl);
+                        waitDialog.show();
+                        mHandler.postDelayed(timeoutRunnable,TIMEOUT_MILLS);
+                        break;
+                    case R.id.tv_next:
+                        if(currentIndex >= (sectionBeanList.size() - 1)){
+                            Toast.makeText(BaseWebActivity.this, "已经是最后一集了~", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                        FLAG_SWITCH_SECTION = SWITCH_TO_NEXT;
+                        SectionBean nextSectionBean = sectionBeanList.get(currentIndex+1);
+                        LogUtils.d(TAG+" nextUrl = "+nextSectionBean.getUrl());
+                        switchUrl = nextSectionBean.getUrl();
+                        mWebView.loadUrl(nextSectionBean.getUrl());
+                        waitDialog.show();
+                        mHandler.postDelayed(timeoutRunnable,TIMEOUT_MILLS);
+                        break;
+                    case R.id.tv_jump:
+                        jumpSectionDialog.show();
+                        break;
+                }
+            }
+        };
+        TextView tv_last = contentView.findViewById(R.id.tv_last);
+        tv_last.setOnClickListener(onClickListener);
+        TextView tv_next = contentView.findViewById(R.id.tv_next);
+        tv_next.setOnClickListener(onClickListener);
+        TextView tv_jump = contentView.findViewById(R.id.tv_jump);
+        tv_jump.setOnClickListener(onClickListener);
+    }
+
+    private void resetWebView(){
+        mWebView.clearHistory();
+        mWebView.clearCache(true);
+        mWebView.clearMatches();
+        mWebView.clearFormData();
+        mWebView.clearSslPreferences();
+    }
+
     private Runnable timeoutRunnable = new Runnable() {
         @Override
         public void run() {
@@ -137,7 +309,9 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
     private void initWebView() {
         WebSettings mWebSettings = mWebView.getSettings();
         mWebView.addJavascriptInterface(new CustomScript(),"customScript");
-//        mWebSettings.setUserAgentString(Constant.USER_AGENT_FORPC);
+//        if(searchType == Constant.FLAG_SEARCH_FILM_TELEVISION){
+//            mWebSettings.setUserAgentString(Constant.USER_AGENT_FORPC);
+//        }
         mWebSettings.setSupportZoom(true);
         mWebSettings.setLoadWithOverviewMode(true);
         mWebSettings.setUseWideViewPort(true);
@@ -186,20 +360,26 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
             if(isFinishing()){
                 return true;
             }
+            LogUtils.d(TAG+" shouldOverrideUrlLoading : url = "+url);
             view.loadUrl(url);
-            LogUtils.d(TAG+" url : "+url);
             return true;
         }
 
         @Override
         public void onPageFinished(WebView webView, String s) {
             super.onPageFinished(webView, s);
+            LogUtils.i(TAG+" onPageFinished...");
             if(isFinishing()){
                 return;
             }
             try{
                 AssetManager assetManager = getAssets();
-                InputStream inputStream = assetManager.open("parser/pureVideo.js");
+                InputStream inputStream = null;
+                if(searchType == Constant.FLAG_SEARCH_ANIM){
+                    inputStream = assetManager.open("parser/pureVideo.js");
+                }else if(searchType == Constant.FLAG_SEARCH_FILM_TELEVISION){
+                    inputStream = assetManager.open("parser/pureVideo_films.js");
+                }
 //                InputStream inputStream = assetManager.open("parser/removeAds.js");
                 StringBuilder stringBuilder = new StringBuilder();
                 int len = 0;
@@ -209,8 +389,10 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
                 }
                 String js = stringBuilder.toString();
                 mWebView.loadUrl(js);
-                String setHeightJS = String.format(getResources().getString(R.string.set_video_height_js),400);
-                mWebView.loadUrl(setHeightJS);
+                if(searchType == Constant.FLAG_SEARCH_ANIM){
+                    String setHeightJS = String.format(getResources().getString(R.string.set_video_height_js),400);
+                    mWebView.loadUrl(setHeightJS);
+                }
                 inputStream.close();
             }catch (IOException ioe){
                 ioe.printStackTrace();
@@ -331,19 +513,20 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
         @JavascriptInterface
         public void onJSLoadComplete(){
             LogUtils.d(TAG+" onJSLoadComplete...");
+            mHandler.sendEmptyMessage(5);
             mHandler.removeCallbacks(timeoutRunnable);
             waitDialog.dismiss();
-            contentView.setVisibility(View.GONE);
-            mWebView.setVisibility(View.VISIBLE);
-            tv_no_data.setVisibility(View.GONE);
+            mHandler.sendEmptyMessage(3);
         }
 
-    }
+        @JavascriptInterface
+        public void onVideoNotExist(){//TODO:暂未实现
+            LogUtils.e(TAG+" onVideoNotExist : 暂不支持该视频的播放，看看其它的吧");
+            mHandler.removeCallbacks(timeoutRunnable);
+            waitDialog.dismiss();
+            mHandler.sendEmptyMessage(4);
+        }
 
-    private void parseDocument(Document document){
-        String pureVideoUrl = document.selectFirst("div.player").selectFirst("iframe#play2").attr("src");
-        LogUtils.d(TAG+" pureVideoUrl : "+pureVideoUrl);
-        mWebView.loadUrl(pureVideoUrl);
     }
 
     @Override

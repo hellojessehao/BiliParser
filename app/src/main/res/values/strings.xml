@@ -4,4 +4,5 @@
     <string name="net_load_failed">啊喔~加载失败了，请重试~</string>
     <string name="et_hint_text_for_anim">输入想看的动漫名称，如海贼王~。~</string>
     <string name="et_hint_text_for_films_television">输入想看的影视剧名称，如鬼吹灯~。~</string>
+    <string name="films_waiting_hint">影视剧加载较慢，请耐心等候~(约40秒钟)</string>
 </resources>

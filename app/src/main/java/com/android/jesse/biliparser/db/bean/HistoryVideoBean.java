@@ -36,7 +36,16 @@ public class HistoryVideoBean {
     private String publishDate;
     private String updateDate;
     private String score;//评分
+    private int searchType;//搜索类型 动漫 或 影视剧
     //@}
+
+    public int getSearchType() {
+        return searchType;
+    }
+
+    public void setSearchType(int searchType) {
+        this.searchType = searchType;
+    }
 
     public String getSectionCount() {
         return sectionCount;
@@ -194,6 +203,7 @@ public class HistoryVideoBean {
                 ", publishDate='" + publishDate + '\'' +
                 ", updateDate='" + updateDate + '\'' +
                 ", score='" + score + '\'' +
+                ", searchType=" + searchType +
                 '}';
     }
 }

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_white_radius_8"
+    android:paddingStart="15dp"
+    android:paddingTop="20dp"
+    android:paddingEnd="10dp"
+    android:paddingBottom="14dp"
+    >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="我要跳转到第"
+            android:textColor="@color/color_maintext_title"
+            android:textSize="16sp"
+            />
+
+        <EditText
+            android:id="@+id/et_section_num"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:textColor="@color/color_selected_tags"
+            android:text=""
+            android:maxLength="4"
+            android:inputType="number"
+            android:digits="1234567890"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="集"
+            android:textColor="@color/color_maintext_title"
+            android:layout_marginStart="5dp"
+            android:textSize="16sp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        >
+
+        <TextView
+            android:id="@+id/tv_negative"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_hint_content"
+            android:layout_marginEnd="27dp"
+            android:layout_toStartOf="@id/tv_positive"
+            android:padding="5dp"
+            android:text="不跳了"
+            android:textColor="@color/color_subtext_subtitle"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_positive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_hint_content"
+            android:layout_alignParentEnd="true"
+            android:padding="5dp"
+            android:text="跳转"
+            android:textColor="@color/color_selected_tags"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

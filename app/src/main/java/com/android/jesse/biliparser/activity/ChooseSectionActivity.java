@@ -159,6 +159,17 @@ public class ChooseSectionActivity extends SimpleActivity {
                         collectionBean.setDesc(searchResultBean.getDesc());
                         collectionBean.setCover(searchResultBean.getCover());
                         collectionBean.setDate(DateUtil.getDefaultTime());
+                        //@{新增字段
+                        collectionBean.setSectionCount(searchResultBean.getSectionCount());
+                        collectionBean.setDirectorList(searchResultBean.getDirectorList());
+                        collectionBean.setActorList(searchResultBean.getActorList());
+                        collectionBean.setType(searchResultBean.getType());
+                        collectionBean.setArea(searchResultBean.getArea());
+                        collectionBean.setPublishDate(searchResultBean.getPublishDate());
+                        collectionBean.setUpdateDate(searchResultBean.getUpdateDate());
+                        collectionBean.setScore(searchResultBean.getScore());
+                        collectionBean.setSearchType(searchType);
+                        //@}
                         List<Long> result = DbHelper.getInstance().insertCollection(collectionBean);
                         if(Utils.isListEmpty(result)){
                             mHandler.sendEmptyMessage(3);
@@ -191,6 +202,7 @@ public class ChooseSectionActivity extends SimpleActivity {
 
     @Override
     protected void initEventAndData() {
+        //TODO:广播监听器 动态修改集数数据
         if(getIntent() != null){
             title = getIntent().getStringExtra(Constant.KEY_TITLE);
             if(!TextUtils.isEmpty(title)){
@@ -233,7 +245,17 @@ public class ChooseSectionActivity extends SimpleActivity {
                 historyVideoBean.setDesc(searchResultBean.getDesc());
                 historyVideoBean.setCover(searchResultBean.getCover());
                 historyVideoBean.setDate(DateUtil.getDefaultTime());
-
+                //@{新增字段
+                historyVideoBean.setSectionCount(searchResultBean.getSectionCount());
+                historyVideoBean.setDirectorList(searchResultBean.getDirectorList());
+                historyVideoBean.setActorList(searchResultBean.getActorList());
+                historyVideoBean.setType(searchResultBean.getType());
+                historyVideoBean.setArea(searchResultBean.getArea());
+                historyVideoBean.setPublishDate(searchResultBean.getPublishDate());
+                historyVideoBean.setUpdateDate(searchResultBean.getUpdateDate());
+                historyVideoBean.setScore(searchResultBean.getScore());
+                historyVideoBean.setSearchType(searchType);
+                //@}
 
                 new Thread(new Runnable() {
                     @Override
@@ -256,11 +278,13 @@ public class ChooseSectionActivity extends SimpleActivity {
                         }
                     }
                 }).start();
-
+                Session.getSession().put(Constant.KEY_SECTION_BEAN_LIST,sectionBeanList);
                 Intent intent = new Intent(mContext,BaseWebActivity.class);
                 intent.putExtra(Constant.KEY_TITLE,sectionBean.getTitle());
                 intent.putExtra(Constant.KEY_URL,sectionBean.getUrl());
                 intent.putExtra(Constant.KEY_NEED_WAIT_PARSE,false);
+                intent.putExtra(Constant.KEY_SEARCH_TYPE,searchType);
+                intent.putExtra(Constant.KEY_CURRENT_INDEX,position);
                 mContext.startActivity(intent);
 //                Intent intent = new Intent(mContext,VideoPlayActivity.class);
 //                intent.putExtra(Constant.KEY_TITLE,sectionBean.getTitle());
@@ -311,7 +335,6 @@ public class ChooseSectionActivity extends SimpleActivity {
 //                    connection.data("searchword",word);
 //                    connection.postDataCharset("GB2312");//关键中的关键！！
                     Document document = connection.method(Connection.Method.GET).get();
-                    LogUtils.d(TAG+" html = \n"+document.outerHtml());
                     mHandler.sendMessage(Message.obtain(mHandler, 0, document));
                 }catch (IOException ioe){
                     ioe.printStackTrace();
@@ -358,7 +381,7 @@ public class ChooseSectionActivity extends SimpleActivity {
                 tags.append(aTag.text()+" ");
             }
             tv_tags.setText("标签："+tags.toString());
-            if(currentIndex > 0){
+            if(showIndex){
                 tv_indexes.setTextColor(getColor(R.color.color_selected_tags));
                 tv_indexes.setText("已观看到第"+currentIndex+"集");
             }else{
@@ -394,16 +417,21 @@ public class ChooseSectionActivity extends SimpleActivity {
             tv_time.setText(versionP.text().replaceAll("\"",""));
             tv_tags.setVisibility(View.GONE);//播放量需要加载js才能出来
             Element actorP = infoContainerElement.selectFirst("p.v-zy");
-            Elements actorAList = actorP.select("a[href]");
-            if(actorAList != null && actorAList.size() > 0){
-                StringBuilder stringBuilder = new StringBuilder();
-                for(int i=0;i<actorAList.size();i++){
-                    if(i>1){//只取两个演员
-                        break;
+            if(showIndex){
+                tv_indexes.setTextColor(getColor(R.color.color_selected_tags));
+                tv_indexes.setText("已观看到第"+currentIndex+"集");
+            }else{
+                Elements actorAList = actorP.select("a[href]");
+                if(actorAList != null && actorAList.size() > 0){
+                    StringBuilder stringBuilder = new StringBuilder();
+                    for(int i=0;i<actorAList.size();i++){
+                        if(i>1){//只取两个演员
+                            break;
+                        }
+                        stringBuilder.append(actorAList.get(i).text()+" ");
                     }
-                    stringBuilder.append(actorAList.get(i).text()+" ");
+                    tv_indexes.setText("主演："+stringBuilder.toString());
                 }
-                tv_indexes.setText("主演："+stringBuilder.toString());
             }
             Element descP = infoContainerElement.selectFirst("p.v-js");
             String desc = descP.text().replaceAll("\"","");

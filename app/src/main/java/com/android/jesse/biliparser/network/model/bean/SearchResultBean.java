@@ -24,8 +24,16 @@ public class SearchResultBean {
     private String publishDate;
     private String updateDate;
     private String score;//评分
+    private int searchType;//搜索类型 动漫 或 影视剧
     //@}
 
+    public int getSearchType() {
+        return searchType;
+    }
+
+    public void setSearchType(int searchType) {
+        this.searchType = searchType;
+    }
 
     public String getUrl() {
         return url;
@@ -156,6 +164,7 @@ public class SearchResultBean {
                 ", publishDate='" + publishDate + '\'' +
                 ", updateDate='" + updateDate + '\'' +
                 ", score='" + score + '\'' +
+                ", searchType=" + searchType +
                 '}';
     }
 }
