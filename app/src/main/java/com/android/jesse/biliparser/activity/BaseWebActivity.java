@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
@@ -40,6 +41,7 @@ import com.android.jesse.biliparser.network.util.ToastUtil;
 import com.android.jesse.biliparser.utils.LogUtils;
 import com.android.jesse.biliparser.utils.Session;
 import com.android.jesse.biliparser.utils.Utils;
+import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.SizeUtils;
 
 import org.jsoup.Connection;
@@ -156,7 +158,6 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
     @Override
     protected void initEventAndData() {
         Utils.setDarkStatusBar(mContext);
-        initWebView();
         initSpinnerPop();
         initJumpSectionDialog();
         sectionBeanList = (List<SectionBean>)Session.getSession().get(Constant.KEY_SECTION_BEAN_LIST);
@@ -170,6 +171,7 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
         if(getIntent() != null){
             title = getIntent().getStringExtra(Constant.KEY_TITLE);
             url = getIntent().getStringExtra(Constant.KEY_URL);
+            LogUtils.i(TAG+" url = "+url);
             currentIndex = getIntent().getIntExtra(Constant.KEY_CURRENT_INDEX,0);
             LogUtils.d(TAG+" currentIndex = "+currentIndex);
             needWaitParse = getIntent().getBooleanExtra(Constant.KEY_NEED_WAIT_PARSE,false);
@@ -178,6 +180,7 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
             if(searchType == Constant.FLAG_SEARCH_FILM_TELEVISION){
                 waitDialog.setMessage(R.string.films_waiting_hint);
             }
+            initWebView();
             if(!TextUtils.isEmpty(title)){
                 tv_title.setText(title);
             }
@@ -222,6 +225,7 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
                         LogUtils.d(TAG+" jumpUrl = "+jumpSectionBean.getUrl());
                         switchUrl = jumpSectionBean.getUrl();
                         mWebView.loadUrl(switchUrl);
+                        FLAG_SWITCH_SECTION = SWITCH_TO_X;
                         jumpSectionDialog.dismiss();
                         waitDialog.show();
                         mHandler.postDelayed(timeoutRunnable,TIMEOUT_MILLS);
@@ -234,6 +238,13 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
         };
         tv_positive.setOnClickListener(onClickListener);
         tv_negative.setOnClickListener(onClickListener);
+        Window window = jumpSectionDialog.getWindow();
+        if (window != null) {
+            WindowManager.LayoutParams layoutParams = window.getAttributes();
+            layoutParams.width = ScreenUtils.getScreenWidth() - SizeUtils.dp2px(30);
+            window.setAttributes(layoutParams);
+        }
+        jumpSectionDialog.setCanceledOnTouchOutside(true);
     }
 
     private void initSpinnerPop(){
@@ -309,9 +320,9 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
     private void initWebView() {
         WebSettings mWebSettings = mWebView.getSettings();
         mWebView.addJavascriptInterface(new CustomScript(),"customScript");
-//        if(searchType == Constant.FLAG_SEARCH_FILM_TELEVISION){
-//            mWebSettings.setUserAgentString(Constant.USER_AGENT_FORPC);
-//        }
+        if(searchType == Constant.FLAG_SEARCH_FILM_TELEVISION){
+            mWebSettings.setUserAgentString(Constant.USER_AGENT_FORPC);
+        }
         mWebSettings.setSupportZoom(true);
         mWebSettings.setLoadWithOverviewMode(true);
         mWebSettings.setUseWideViewPort(true);
@@ -372,13 +383,19 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
             if(isFinishing()){
                 return;
             }
+//            以下省略代码用于不执行脚本直接播放时使用
+//            mHandler.removeCallbacks(timeoutRunnable);
+//            waitDialog.dismiss();
+//            mHandler.sendEmptyMessage(3);
             try{
                 AssetManager assetManager = getAssets();
                 InputStream inputStream = null;
                 if(searchType == Constant.FLAG_SEARCH_ANIM){
                     inputStream = assetManager.open("parser/pureVideo.js");
                 }else if(searchType == Constant.FLAG_SEARCH_FILM_TELEVISION){
-                    inputStream = assetManager.open("parser/pureVideo_films.js");
+                    inputStream = assetManager.open("parser/pureVideo_films_pc_2.js");
+//                    inputStream = assetManager.open("parser/pureVideo_films_pc.js");
+//                    inputStream = assetManager.open("parser/pureVideo_films.js");
                 }
 //                InputStream inputStream = assetManager.open("parser/removeAds.js");
                 StringBuilder stringBuilder = new StringBuilder();
@@ -392,6 +409,10 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
                 if(searchType == Constant.FLAG_SEARCH_ANIM){
                     String setHeightJS = String.format(getResources().getString(R.string.set_video_height_js),400);
                     mWebView.loadUrl(setHeightJS);
+                }else if(searchType == Constant.FLAG_SEARCH_FILM_TELEVISION){
+//                    String setHeightJS = String.format(getResources().getString(R.string.set_video_height_js_films_pc),ScreenUtils.getScreenWidth(),
+//                            SizeUtils.dp2px(400));
+//                    mWebView.loadUrl(setHeightJS);
                 }
                 inputStream.close();
             }catch (IOException ioe){

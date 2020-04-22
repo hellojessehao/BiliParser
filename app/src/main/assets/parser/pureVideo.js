@@ -21,7 +21,7 @@ for(var i=0;i<arr.length;i++){
     }
     var className = arr[i].className;
     if(className == '' || (className.indexOf('player') == -1 && className.indexOf('playbox') == -1)
-        || className.indexOf('-') != -1){
+        || className.indexOf('-') != -1 || tagName.indexOf('img') != -1){
             arr[i].parentNode.removeChild(arr[i]);
         }
 }
