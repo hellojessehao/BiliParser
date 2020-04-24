@@ -5,16 +5,19 @@ import android.text.TextUtils;
 
 import com.android.jesse.biliparser.network.base.RxPresenter;
 import com.android.jesse.biliparser.network.model.DataManager;
+import com.android.jesse.biliparser.network.model.bean.VersionCheckBean;
 import com.android.jesse.biliparser.network.model.contract.MainContract;
 import com.android.jesse.biliparser.network.util.CommonSubscriber;
 import com.android.jesse.biliparser.network.util.RxUtil;
 import com.android.jesse.biliparser.utils.LogUtils;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import io.reactivex.functions.Consumer;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
@@ -32,6 +35,18 @@ public class MainPresenter extends RxPresenter<MainContract.View> implements Mai
     @Inject
     public MainPresenter(DataManager dataManager) {
         this.dataManager = dataManager;
+    }
+
+    @Override
+    public void versionCheck(Map<String, RequestBody> map) {
+        addSubscribe(dataManager.versionCheck(map)
+                .compose(RxUtil.rxSchedulerHelper())
+                .subscribeWith(new CommonSubscriber<VersionCheckBean>(mView) {
+                    @Override
+                    public void onNext(VersionCheckBean versionCheckBean) {
+                        mView.onVersionCheck(versionCheckBean);
+                    }
+                }));
     }
 
     @Override

@@ -25,7 +25,7 @@
     <color name="gray_30">#B3cccccc</color>
     <color name="themeColor">#2196f3</color>
     <color name="themeTextColor">#ffffff</color>
-
+    <color name="transparent">#00000000</color>
     <color name="tansplate">#00000000</color>
     <color name="color_f0f0f0">#f0f0f0</color>
     <color name="color_1FA7DC">#1FA7DC</color>

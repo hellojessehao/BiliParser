@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/transparent"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="15dp"
+        android:background="@drawable/bg_white_stroke1_radius8"
+        android:layout_centerInParent="true"
+        android:layout_margin="15dp"
+        >
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="beta_title"
+            android:text="检测到新版本"
+            android:textColor="@color/color_maintext_title"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/color_most_shallow_background" />
+
+        <TextView
+            android:id="@+id/tv_version_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:tag="beta_upgrade_info"
+            android:text="版本:"
+            android:textColor="@color/color_subtext_subtitle"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_package_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:tag="beta_upgrade_info"
+            android:text="包大小:"
+            android:textColor="@color/color_subtext_subtitle"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_upgrade_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:tag="beta_upgrade_info"
+            android:text="更新时间:"
+            android:textColor="@color/color_subtext_subtitle"
+            android:textSize="14sp" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="20dp"
+            android:scrollbars="none"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="beta_upgrade_feature"
+                    android:text="更新内容"
+                    android:textColor="@color/color_maintext_title"
+                    android:textSize="14dp" />
+
+                <TextView
+                    android:id="@+id/tv_upgrade_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text=""
+                    android:textColor="@color/color_subtext_subtitle" />
+            </LinearLayout>
+        </ScrollView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/color_most_shallow_background" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_upgrade"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_red_radius45"
+                android:tag="beta_confirm_button"
+                android:text="开始下载"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_weight="0.5"
+                android:background="@drawable/bg_white_strokered1_radius45"
+                android:tag="beta_cancel_button"
+                android:text="稍后"
+                android:textColor="@color/red" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

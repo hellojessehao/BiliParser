@@ -19,6 +19,11 @@ public class Constant {
     public static final String JIJI_BASE_URL = "https://www.jijidy.com/";
     //@}
 
+    //@{thirdpart
+    public static final String APPID_BUGLY = "abb0b9eb68";
+    public static final String APPKEY_BUGLY = "412a01d5-260b-4d8c-a296-1f73bbff8212";
+    //@}
+
     //@{paths
     public static final String PATH_DATA = App.getInstance().getCacheDir().getAbsolutePath() + File.separator + "data";
     public static final String PATH_CACHE = PATH_DATA + "/NetCache";
@@ -54,6 +59,7 @@ public class Constant {
     public static final String SPKEY_SEARCH_HISTORY = "spkey_search_history";
     public static final String SPKEY_SEARCH_TYPE = "spkey_search_type";
     public static final String KEY_SECTION_BEAN_LIST = "key_section_bean_list";
+    public static final String SPKEY_IS_SHOULD_VERSION_CHECK = "spkey_is_should_version_check";
     //@}
 
     //@{BROADCAST ACTIONS

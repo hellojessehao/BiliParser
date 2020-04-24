@@ -2,6 +2,7 @@ package com.android.jesse.biliparser.network.model.http.api;
 
 
 import com.android.jesse.biliparser.network.model.bean.ResponseBaseBean;
+import com.android.jesse.biliparser.network.model.bean.VersionCheckBean;
 
 import java.util.Map;
 
@@ -38,5 +39,9 @@ public interface MainApi {
     })
     @POST("search.asp")
     Flowable<ResponseBody> searchAnims(@Query("searchword") String keyword);//根据keyword查询动漫
+
+    @Multipart
+    @GET("http://api.bq04.com/apps/latest/:id")
+    Flowable<VersionCheckBean> versionCheck(Map<String,RequestBody> map);
 
 }

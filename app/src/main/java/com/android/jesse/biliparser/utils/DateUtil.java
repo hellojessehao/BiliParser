@@ -33,4 +33,18 @@ public class DateUtil {
         return getTime("yyyy-MM-dd HH:mm:ss");
     }
 
+    /**
+     * 获取格式化后的日期字符串
+     * @param mills 日期毫秒数
+     * @param formatRule 格式化规则
+     * @return 格式化后的日期字符串
+     */
+    public static String getFormatedDate(long mills,String formatRule){
+        String formatedDate = "";
+        Date date = new Date(mills);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(formatRule);
+        formatedDate = simpleDateFormat.format(date);
+        return formatedDate;
+    }
+
 }

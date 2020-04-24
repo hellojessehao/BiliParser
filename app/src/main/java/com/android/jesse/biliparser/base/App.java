@@ -12,6 +12,9 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
 
+import com.android.jesse.biliparser.BuildConfig;
+import com.android.jesse.biliparser.activity.MainActivity;
+import com.android.jesse.biliparser.activity.UpgradeActivity;
 import com.android.jesse.biliparser.db.base.DbHelper;
 import com.android.jesse.biliparser.network.component.InitializeService;
 import com.android.jesse.biliparser.network.di.component.AppComponent;
@@ -19,9 +22,14 @@ import com.android.jesse.biliparser.network.di.component.DaggerAppComponent;
 import com.android.jesse.biliparser.network.di.module.AppModule;
 import com.android.jesse.biliparser.network.di.module.HttpModule;
 import com.android.jesse.biliparser.utils.CrashHandler;
+import com.android.jesse.biliparser.utils.LogUtils;
 import com.android.jesse.biliparser.utils.SharePreferenceUtil;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
+import com.tencent.bugly.Bugly;
+import com.tencent.bugly.beta.Beta;
+import com.tencent.bugly.beta.UpgradeInfo;
+import com.tencent.bugly.beta.upgrade.UpgradeListener;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -35,6 +43,7 @@ import java.util.Set;
  */
 public class App extends Application implements Application.ActivityLifecycleCallbacks {
 
+    private static final String TAG = App.class.getSimpleName();
     public static Context mContext;
     public static App app;
     public static AppComponent appComponent;
@@ -71,6 +80,40 @@ public class App extends Application implements Application.ActivityLifecycleCal
         DbHelper.initInstance(mContext);
         //初始化缓存工具类
         SharePreferenceUtil.init(mContext);
+        //初始化buglySDK并检测是否有新版本
+        initBugly();
+    }
+
+    private void initBugly(){
+        //激活版本监测
+        SharePreferenceUtil.put(Constant.SPKEY_IS_SHOULD_VERSION_CHECK,true);
+        //初始化BuglySDK
+        Beta.autoDownloadOnWifi = true;//wifi下自动下载
+        Beta.canShowUpgradeActs.add(MainActivity.class);
+        Beta.upgradeListener = new UpgradeListener() {
+            @Override
+            public void onUpgrade(int ret, UpgradeInfo strategy, boolean isManual, boolean isSilence) {
+                SharePreferenceUtil.put(Constant.SPKEY_IS_SHOULD_VERSION_CHECK,false);
+                if (strategy != null) {
+                    LogUtils.i(TAG+" find new version");
+                    Intent i = new Intent();
+                    i.setClass(getApplicationContext(), UpgradeActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(i);
+                } else {
+                    LogUtils.i(TAG+" no new version to upgrade");
+                }
+            }
+        };
+        if(SharePreferenceUtil.getBoolean(Constant.SPKEY_IS_SHOULD_VERSION_CHECK)){
+            LogUtils.i(TAG+" checkUpgrade...");
+            Beta.autoCheckUpgrade = true;
+            Bugly.init(getApplicationContext(), Constant.APPID_BUGLY, BuildConfig.LOG_DEBUG);
+        }else{
+            LogUtils.i(TAG+" no checkUpgrade,only init...");
+            Beta.autoCheckUpgrade = false;//不在初始化SDK时自动监测更新
+            Bugly.init(getApplicationContext(), Constant.APPID_BUGLY, BuildConfig.LOG_DEBUG);
+        }
     }
 
     public static App getApp() {

@@ -21,7 +21,7 @@ public interface CollectionDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     List<Long> insertCollection(CollectionBean... collectionBeans);
 
-    @Query("SELECT * FROM collection")
+    @Query("SELECT * FROM collection ORDER BY date DESC")
     List<CollectionBean> queryAllCollection();
 
     @Query("SELECT * FROM collection where videoId = :videoId")

@@ -20,7 +20,7 @@ public interface HistoryVideoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     List<Long> insertHistoryVideo(HistoryVideoBean... historyVideoBeans);
 
-    @Query("SELECT * FROM historyvideo")
+    @Query("SELECT * FROM historyvideo ORDER BY date DESC")
     List<HistoryVideoBean> queryAll();
 
     @Query("SELECT * FROM historyvideo where videoId = :videoId")

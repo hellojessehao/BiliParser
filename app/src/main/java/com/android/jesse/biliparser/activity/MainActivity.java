@@ -34,11 +34,13 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.jesse.biliparser.BuildConfig;
 import com.android.jesse.biliparser.R;
 import com.android.jesse.biliparser.base.Constant;
 import com.android.jesse.biliparser.components.WaitDialog;
 import com.android.jesse.biliparser.db.base.DbHelper;
 import com.android.jesse.biliparser.network.base.BaseActivity;
+import com.android.jesse.biliparser.network.model.bean.VersionCheckBean;
 import com.android.jesse.biliparser.network.model.contract.MainContract;
 import com.android.jesse.biliparser.network.model.presenter.MainPresenter;
 import com.android.jesse.biliparser.network.util.ToastUtil;
@@ -57,6 +59,10 @@ import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.tencent.bugly.Bugly;
+import com.tencent.bugly.beta.Beta;
+import com.tencent.bugly.beta.UpgradeInfo;
+import com.tencent.bugly.beta.upgrade.UpgradeListener;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -87,6 +93,8 @@ import javax.net.ssl.X509TrustManager;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 public class MainActivity extends BaseActivity<MainPresenter> implements MainContract.View {
 
@@ -414,6 +422,10 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         }
     }
 
+    @Override
+    public void onVersionCheck(VersionCheckBean versionCheckBean) {
+
+    }
 
     @Override
     public void onGetSearchAnims(String result) {

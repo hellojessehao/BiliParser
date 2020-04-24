@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BiliParser</string>
+    <string name="app_name">提雅视频</string>
     <string name="set_video_height_js">javascript:window.customScript.log(\'===setVideoSize start===\');var iframe = document.getElementsByTagName(\'iframe\')[0];iframe.setAttribute(\'height\',\'%1$dpx\');window.customScript.log(\'===setVideoSize finished===\');</string>
     <string name="set_video_height_js_films_pc">javascript:window.customScript.log(\'===setVideoSize start===\');var macPlayer = document.getElementsByClassName(\'MacPlayer\')[0];macPlayer.setAttribute(\'width\',\'%1$dpx\');macPlayer.setAttribute(\'height\',\'%2$dpx\');window.customScript.log(\'===setVideoSize finished===\');</string>
     <string name="net_load_failed">啊喔~加载失败了，请重试~</string>
