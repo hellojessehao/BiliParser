@@ -61,6 +61,20 @@ android {
             zipAlignEnabled true  //压缩优化
             shrinkResources true  //移出无用资源
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro' //默认的混淆文件以及我们指定的混淆文件
+            // 自定义输出配置
+            applicationVariants.all { variant ->
+                variant.outputs.all {
+                    def fileName
+                    def date = new Date()
+                    def formattedDate = date.format('yyyyMMdd')
+                    if (variant.buildType.name.equals('release')) {
+                        fileName = "TiiyaVideo_release_${variant.mergedFlavor.versionName}_${formattedDate}.apk"
+                    } else if (variant.buildType.name.equals('debug')) {
+                        fileName = "TiiyaVideo_debug_${variant.mergedFlavor.versionName}_${formattedDate}.apk"
+                    }
+                    outputFileName = fileName;
+                }
+            }
         }
     }
 }
