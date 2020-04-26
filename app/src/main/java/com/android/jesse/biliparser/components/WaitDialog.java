@@ -47,7 +47,7 @@ public class WaitDialog extends Dialog {
     private void initView() {
         waitView = LayoutInflater.from(context).inflate(R.layout.dialog_waiting, null);
 
-        setCanceledOnTouchOutside(false); // 点击加载框以外的区域
+        setCanceledOnTouchOutside(true); // 点击加载框以外的区域
         setContentView(waitView, new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT));// 设置布局

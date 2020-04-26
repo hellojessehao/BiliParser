@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -285,7 +286,7 @@ public class ChooseSectionActivity extends SimpleActivity {
                 intent.putExtra(Constant.KEY_NEED_WAIT_PARSE,false);
                 intent.putExtra(Constant.KEY_SEARCH_TYPE,searchType);
                 intent.putExtra(Constant.KEY_CURRENT_INDEX,position);
-                mContext.startActivity(intent);
+                mContext.startActivityForResult(intent,105);
 //                Intent intent = new Intent(mContext,VideoPlayActivity.class);
 //                intent.putExtra(Constant.KEY_TITLE,sectionBean.getTitle());
 //                intent.putExtra(Constant.KEY_URL,sectionBean.getUrl());
@@ -463,4 +464,11 @@ public class ChooseSectionActivity extends SimpleActivity {
         waitDialog.dismiss();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 105 && showIndex){
+            tv_indexes.setText("已观看到第"+data.getIntExtra(Constant.KEY_CURRENT_INDEX,currentIndex)+"集");
+        }
+    }
 }

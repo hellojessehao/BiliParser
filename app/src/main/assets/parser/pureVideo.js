@@ -28,5 +28,3 @@ for(var i=0;i<arr.length;i++){
 var html = document.getElementsByTagName('html')[0];
 window.customScript.log('html : '+html.innerHTML);
 window.customScript.onJSLoadComplete();
-//var videoParent = document.getElementById('mobile-index');
-//videoParent.setAttribute('style','position:fixed;align-items: \"center\";');
