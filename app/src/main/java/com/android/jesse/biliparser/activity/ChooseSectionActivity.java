@@ -9,7 +9,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +24,7 @@ import com.android.jesse.biliparser.network.base.SimpleActivity;
 import com.android.jesse.biliparser.network.component.OffsetRecyclerDivider;
 import com.android.jesse.biliparser.network.model.bean.SearchResultBean;
 import com.android.jesse.biliparser.network.model.bean.SectionBean;
+import com.android.jesse.biliparser.network.util.ToastUtil;
 import com.android.jesse.biliparser.utils.DateUtil;
 import com.android.jesse.biliparser.utils.GlideUtil;
 import com.android.jesse.biliparser.utils.LogUtils;
@@ -280,7 +280,7 @@ public class ChooseSectionActivity extends SimpleActivity {
                     }
                 }).start();
                 Session.getSession().put(Constant.KEY_SECTION_BEAN_LIST,sectionBeanList);
-                Intent intent = new Intent(mContext,BaseWebActivity.class);
+                Intent intent = new Intent(mContext,PlayWebActivity.class);
                 intent.putExtra(Constant.KEY_TITLE,sectionBean.getTitle());
                 intent.putExtra(Constant.KEY_URL,sectionBean.getUrl());
                 intent.putExtra(Constant.KEY_NEED_WAIT_PARSE,false);
@@ -467,7 +467,13 @@ public class ChooseSectionActivity extends SimpleActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 105 && showIndex){
+        if(resultCode == 106){
+            if(data != null){
+                ToastUtil.show("加载超时，请检查网络后重试~\n当前看到第"+data.getIntExtra(Constant.KEY_CURRENT_INDEX,currentIndex)+"集");
+            }else{
+                ToastUtil.show("加载超时，请检查网络后重试~");
+            }
+        }else if(requestCode == 105 && showIndex){
             tv_indexes.setText("已观看到第"+data.getIntExtra(Constant.KEY_CURRENT_INDEX,currentIndex)+"集");
         }
     }

@@ -1,7 +1,6 @@
 package com.android.jesse.biliparser.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,17 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.android.jesse.biliparser.R;
-import com.android.jesse.biliparser.activity.BaseWebActivity;
-import com.android.jesse.biliparser.activity.VideoPlayActivity;
-import com.android.jesse.biliparser.base.Constant;
-import com.android.jesse.biliparser.db.base.DbHelper;
-import com.android.jesse.biliparser.db.bean.HistoryVideoBean;
-import com.android.jesse.biliparser.network.model.bean.SearchResultBean;
 import com.android.jesse.biliparser.network.model.bean.SectionBean;
-import com.android.jesse.biliparser.utils.LogUtils;
-import com.android.jesse.biliparser.utils.Session;
 
-import java.util.Arrays;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;

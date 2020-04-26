@@ -213,6 +213,23 @@ public class DialogUtil {
         builder.show();
     }
 
+    //版权声明弹窗
+    public static void showCopyRightDialog(Context context){
+        Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        View contentView = LayoutInflater.from(context).inflate(R.layout.copy_right_dialog,null,false);
+        dialog.setContentView(contentView);
+        TextView tv_positive = contentView.findViewById(R.id.tv_positive);
+        tv_positive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+    }
+
     public interface ButtonCallBack {
         void onPositive();
 

@@ -30,6 +30,7 @@ import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
 import com.tencent.bugly.beta.upgrade.UpgradeListener;
+import com.tencent.bugly.beta.upgrade.UpgradeStateListener;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -90,6 +91,33 @@ public class App extends Application implements Application.ActivityLifecycleCal
         //初始化BuglySDK
         Beta.autoDownloadOnWifi = true;//wifi下自动下载
         Beta.canShowUpgradeActs.add(MainActivity.class);
+        /* 设置更新状态回调接口 */
+        Beta.upgradeStateListener = new UpgradeStateListener() {
+            @Override
+            public void onDownloadCompleted(boolean b) {
+                LogUtils.i(TAG+" upgradeStateListener : onDownloadCompleted");
+            }
+
+            @Override
+            public void onUpgradeSuccess(boolean isManual) {
+                LogUtils.i(TAG+" upgradeStateListener : onUpgradeSuccess");
+            }
+
+            @Override
+            public void onUpgradeFailed(boolean isManual) {
+                LogUtils.i(TAG+" upgradeStateListener : onUpgradeFailed");
+            }
+
+            @Override
+            public void onUpgrading(boolean isManual) {
+                LogUtils.i(TAG+" upgradeStateListener : onUpgrading");
+            }
+
+            @Override
+            public void onUpgradeNoVersion(boolean isManual) {
+                LogUtils.i(TAG+" upgradeStateListener : onUpgradeNoVersion");
+            }
+        };
         Beta.upgradeListener = new UpgradeListener() {
             @Override
             public void onUpgrade(int ret, UpgradeInfo strategy, boolean isManual, boolean isSilence) {
@@ -108,11 +136,11 @@ public class App extends Application implements Application.ActivityLifecycleCal
         if(SharePreferenceUtil.getBoolean(Constant.SPKEY_IS_SHOULD_VERSION_CHECK)){
             LogUtils.i(TAG+" checkUpgrade...");
             Beta.autoCheckUpgrade = true;
-            Bugly.init(getApplicationContext(), Constant.APPID_BUGLY, BuildConfig.LOG_DEBUG);
+            Bugly.init(getApplicationContext(), Constant.APPID_BUGLY, /*BuildConfig.LOG_DEBUG*/true);
         }else{
             LogUtils.i(TAG+" no checkUpgrade,only init...");
             Beta.autoCheckUpgrade = false;//不在初始化SDK时自动监测更新
-            Bugly.init(getApplicationContext(), Constant.APPID_BUGLY, BuildConfig.LOG_DEBUG);
+            Bugly.init(getApplicationContext(), Constant.APPID_BUGLY, /*BuildConfig.LOG_DEBUG*/true);
         }
     }
 

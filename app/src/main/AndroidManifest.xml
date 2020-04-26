@@ -32,7 +32,7 @@
         <activity android:name=".activity.ChooseSectionActivity"
             android:screenOrientation="portrait"
             />
-        <activity android:name=".activity.BaseWebActivity"
+        <activity android:name=".activity.PlayWebActivity"
             android:hardwareAccelerated ="true"
             android:configChanges="orientation|screenSize|keyboardHidden"
             />
@@ -47,6 +47,12 @@
             />
         <activity android:name=".activity.UpgradeActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
+            />
+        <activity android:name=".activity.AboutUsActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".activity.RookieHelpActivity"
+            android:screenOrientation="portrait"
             />
 
         <!-- @{bugly在线升级 -->

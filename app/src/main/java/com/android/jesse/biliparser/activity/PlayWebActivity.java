@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,12 +37,10 @@ import com.android.jesse.biliparser.R;
 import com.android.jesse.biliparser.base.Constant;
 import com.android.jesse.biliparser.components.WaitDialog;
 import com.android.jesse.biliparser.db.base.DbHelper;
-import com.android.jesse.biliparser.db.bean.HistoryVideoBean;
 import com.android.jesse.biliparser.network.base.SimpleActivity;
 import com.android.jesse.biliparser.network.model.bean.SearchResultBean;
 import com.android.jesse.biliparser.network.model.bean.SectionBean;
 import com.android.jesse.biliparser.network.util.ToastUtil;
-import com.android.jesse.biliparser.utils.DateUtil;
 import com.android.jesse.biliparser.utils.LogUtils;
 import com.android.jesse.biliparser.utils.Session;
 import com.android.jesse.biliparser.utils.Utils;
@@ -57,21 +54,20 @@ import org.jsoup.nodes.Document;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
- * @ClassName: BaseWebActivity
- * @Desciption: webview基础activity
+ * @ClassName: PlayWebActivity
+ * @Desciption: 播放用webView
  * @author: zhangshihao
  * @date: 2019/8/14
  */
-public class BaseWebActivity extends SimpleActivity implements View.OnClickListener {
+public class PlayWebActivity extends SimpleActivity implements View.OnClickListener {
 
-    private static final String TAG = "BaseWebActivity";
+    private static final String TAG = "PlayWebActivity";
 
     @BindView(R.id.base_web_webview)
     protected WebView mWebView;
@@ -94,7 +90,7 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
     protected String url;
     private boolean needWaitParse = false;
     private WaitDialog waitDialog;
-    private final int TIMEOUT_MILLS = 60 * 1000;
+    private final int TIMEOUT_MILLS = 5 * 1000;
     private int searchType = Constant.FLAG_SEARCH_ANIM;
     private PopupWindow spinnerPop;
     private List<SectionBean> sectionBeanList;
@@ -119,11 +115,15 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
                 tv_debug.setText((String) msg.obj);
             } else if (msg.what == 2) {
                 waitDialog.dismiss();
-                ToastUtil.shortShow("加载超时，可继续等待或退出重试~");
+                Intent intent = new Intent();
+                intent.putExtra(Constant.KEY_CURRENT_INDEX,currentIndex+1);
+                setResult(106,intent);
+                finish();
             } else if (msg.what == 3) {
                 contentView.setVisibility(View.GONE);
                 mWebView.setVisibility(View.VISIBLE);
                 tv_no_data.setVisibility(View.GONE);
+                waitDialog.dismiss();
             } else if (msg.what == 4) {
                 contentView.setVisibility(View.GONE);
                 mWebView.setVisibility(View.GONE);
@@ -139,18 +139,21 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
                         tv_title.setText("第" + (currentIndex + 1) + "集");
                         FLAG_SWITCH_SECTION = NO_SWITCH;
                         updateSectionIndex();
+                        mWebView.clearCache(true);
                         break;
                     case SWITCH_TO_NEXT:
                         currentIndex++;
                         tv_title.setText("第" + (currentIndex + 1) + "集");
                         FLAG_SWITCH_SECTION = NO_SWITCH;
                         updateSectionIndex();
+                        mWebView.clearCache(true);
                         break;
                     case SWITCH_TO_X:
                         currentIndex = tempJumpIndex;
                         tv_title.setText("第" + (currentIndex + 1) + "集");
                         FLAG_SWITCH_SECTION = NO_SWITCH;
                         updateSectionIndex();
+                        mWebView.clearCache(true);
                         break;
                 }
             }
@@ -189,10 +192,8 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
             LogUtils.d(TAG + " currentIndex = " + currentIndex);
             needWaitParse = getIntent().getBooleanExtra(Constant.KEY_NEED_WAIT_PARSE, false);
             waitDialog = new WaitDialog(mContext, R.style.Dialog_Translucent_Background);
+            waitDialog.setCanceledOnTouchOutside(false);
             searchType = getIntent().getIntExtra(Constant.KEY_SEARCH_TYPE, Constant.FLAG_SEARCH_ANIM);
-            if (searchType == Constant.FLAG_SEARCH_FILM_TELEVISION) {
-                waitDialog.setMessage(R.string.films_waiting_hint);
-            }
             initWebView();
             if (!TextUtils.isEmpty(title)) {
                 tv_title.setText(title);
@@ -257,14 +258,14 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
                     case R.id.tv_positive:
                         if (TextUtils.isEmpty(number)) {
                             LogUtils.e(TAG + " jump number is null");
-                            Toast.makeText(BaseWebActivity.this, "请输入跳转集数~", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PlayWebActivity.this, "请输入跳转集数~", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         tempJumpIndex = Integer.valueOf(number) - 1;
                         LogUtils.d(TAG + " tempJumpIndex = " + tempJumpIndex);
                         if (tempJumpIndex > (sectionBeanList.size() - 1) || tempJumpIndex < 0) {
                             tempJumpIndex = -1;
-                            Toast.makeText(BaseWebActivity.this, "请输入正确的数值~", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PlayWebActivity.this, "请输入正确的数值~", Toast.LENGTH_SHORT).show();
                             break;
                         }
                         SectionBean jumpSectionBean = sectionBeanList.get(tempJumpIndex);
@@ -309,7 +310,7 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
                 switch (v.getId()) {
                     case R.id.tv_last:
                         if (currentIndex <= 0) {
-                            Toast.makeText(BaseWebActivity.this, "这好像是第一集~", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PlayWebActivity.this, "这好像是第一集~", Toast.LENGTH_SHORT).show();
                             break;
                         }
                         FLAG_SWITCH_SECTION = SWITCH_TO_LAST;
@@ -322,7 +323,7 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
                         break;
                     case R.id.tv_next:
                         if (currentIndex >= (sectionBeanList.size() - 1)) {
-                            Toast.makeText(BaseWebActivity.this, "已经是最后一集了~", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PlayWebActivity.this, "已经是最后一集了~", Toast.LENGTH_SHORT).show();
                             break;
                         }
                         FLAG_SWITCH_SECTION = SWITCH_TO_NEXT;
@@ -588,8 +589,7 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
             LogUtils.d(TAG + " onJSLoadComplete...");
             mHandler.sendEmptyMessage(5);
             mHandler.removeCallbacks(timeoutRunnable);
-            waitDialog.dismiss();
-            mHandler.sendEmptyMessage(3);
+            mHandler.sendEmptyMessageDelayed(3,500);
         }
 
         @JavascriptInterface
@@ -642,4 +642,8 @@ public class BaseWebActivity extends SimpleActivity implements View.OnClickListe
         this.enableProgressBar = enableProgressBar;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

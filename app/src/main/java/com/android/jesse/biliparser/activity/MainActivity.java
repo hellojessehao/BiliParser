@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Message;
@@ -22,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.JavascriptInterface;
 import android.widget.Button;
 import android.widget.EditText;
@@ -68,6 +70,7 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -108,12 +111,14 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     TagFlowLayout fl_search_history;
     @BindView(R.id.btn_translate)
     Button btn_translate;
-    @BindView(R.id.ll_content_container)
-    LinearLayout ll_content_container;
+    @BindView(R.id.rl_content_container)
+    RelativeLayout rl_content_container;
     @BindView(R.id.scrollView)
     ScrollView scrollView;
     @BindView(R.id.tv_select_search_type)
     TextView tv_select_search_type;
+    @BindView(R.id.tv_appname)
+    TextView tv_appname;
 
     private WaitDialog waitDialog;
     @SuppressLint("HandlerLeak")
@@ -158,15 +163,32 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     @Override
     protected void initEventAndData() {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        iv_back.setVisibility(View.GONE);
+        iv_back.setVisibility(View.VISIBLE);
+        iv_back.setImageResource(R.mipmap.ic_help);
         iv_right.setVisibility(View.VISIBLE);
         iv_right.setImageResource(R.mipmap.ic_main_menu);
+        tv_appname.setTypeface(Typeface.createFromAsset(getAssets(),"font"+File.separator+"yahei_2.ttf"));
         searchType = SharePreferenceUtil.getInt(Constant.SPKEY_SEARCH_TYPE,Constant.FLAG_SEARCH_ANIM);
         if(searchType == Constant.FLAG_SEARCH_ANIM){
             tv_select_search_type.setText("搜动漫");
         }else if(searchType == Constant.FLAG_SEARCH_FILM_TELEVISION){
             tv_select_search_type.setText("搜影视");
         }
+        et_word.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                //是否是回车键
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    //隐藏键盘
+                    ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+                            .hideSoftInputFromWindow(MainActivity.this.getCurrentFocus()
+                                    .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                    //搜索
+                    btn_translate.performClick();
+                }
+                return false;
+            }
+        });
         initSpinnerPop();
         initSearchTypePop();
         initSearchHistory();
@@ -217,19 +239,19 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
             @Override
             public void keyBoardShow(int height) {
                 int scrollHeight = scrollView.getHeight();
-                int llHeight = ll_content_container.getHeight();
-                float llY = ll_content_container.getY();
+                int llHeight = rl_content_container.getHeight();
+                float llY = rl_content_container.getY();
                 float raiseHeight = height - (scrollHeight - llHeight - llY);
-                FrameLayout.LayoutParams llParams = (FrameLayout.LayoutParams) ll_content_container.getLayoutParams();
+                FrameLayout.LayoutParams llParams = (FrameLayout.LayoutParams) rl_content_container.getLayoutParams();
                 llParams.bottomMargin = (int) raiseHeight;
-                ll_content_container.setLayoutParams(llParams);
+                rl_content_container.setLayoutParams(llParams);
             }
 
             @Override
             public void keyBoardHide(int height) {
-                FrameLayout.LayoutParams llParams = (FrameLayout.LayoutParams) ll_content_container.getLayoutParams();
+                FrameLayout.LayoutParams llParams = (FrameLayout.LayoutParams) rl_content_container.getLayoutParams();
                 llParams.bottomMargin = 0;
-                ll_content_container.setLayoutParams(llParams);
+                rl_content_container.setLayoutParams(llParams);
             }
         });
 
@@ -353,14 +375,27 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     }
 
     @Override
+    protected void onBackClick() {
+        super.onBackClick();
+        startActivity(new Intent(mContext,RookieHelpActivity.class));
+    }
+
+    @Override
     protected void onRightClick() {
         super.onRightClick();
         spinnerPop.showAsDropDown(iv_right, 0, -SizeUtils.dp2px(8));
     }
 
-    @OnClick({R.id.btn_translate, R.id.iv_delete,R.id.tv_select_search_type})
+    @OnClick({R.id.btn_translate, R.id.iv_delete,R.id.tv_select_search_type,
+    R.id.tv_copyright_statement,R.id.tv_about_us})
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.tv_about_us:
+                startActivity(new Intent(mContext,AboutUsActivity.class));
+                break;
+            case R.id.tv_copyright_statement:
+                DialogUtil.showCopyRightDialog(mContext);
+                break;
             case R.id.tv_select_search_type:
                 tv_select_search_type.setCompoundDrawablesWithIntrinsicBounds(0,0,R.mipmap.ic_arrow_up_deep,0);
                 selectTypePop.showAsDropDown(tv_select_search_type,0,SizeUtils.dp2px(3));

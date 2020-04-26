@@ -14,15 +14,34 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
+        android:fillViewport="true"
         >
 
-        <LinearLayout
-            android:id="@+id/ll_content_container"
+        <RelativeLayout
+            android:id="@+id/rl_content_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:orientation="vertical"
             >
+
+            <ImageView
+                android:id="@+id/iv_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:src="@mipmap/ic_logo_no_text"
+                android:layout_marginTop="20dp"
+                />
+
+            <TextView
+                android:id="@+id/tv_appname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_logo"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/logo_background"
+                android:text="TIIYA VIDEO"
+                />
 
             <TextView
                 android:id="@+id/tv_select_search_type"
@@ -38,14 +57,17 @@
                 android:paddingEnd="5dp"
                 android:paddingTop="2dp"
                 android:paddingBottom="2dp"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="60dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="60dp"
+                android:layout_below="@id/tv_appname"
                 />
 
             <EditText
                 android:id="@+id/et_word"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="输入想看的动漫名称，如海贼王~。~"
+                android:hint="输入想看的动漫名称，点击搜索~"
                 android:textSize="16sp"
                 android:drawableStart="@mipmap/ic_search"
                 android:drawablePadding="10dp"
@@ -55,6 +77,9 @@
                 android:maxLines="1"
                 android:maxLength="30"
                 android:text=""
+                android:layout_below="@id/tv_select_search_type"
+                android:imeOptions="actionSearch"
+                android:singleLine="true"
                 />
 
             <RelativeLayout
@@ -64,6 +89,7 @@
                 android:visibility="visible"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_below="@id/et_word"
                 >
 
                 <TextView
@@ -112,8 +138,47 @@
                 android:textColor="@color/white"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_below="@id/rl_search_history_container"
                 />
 
-        </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="5dp"
+                >
+
+                <TextView
+                    android:id="@+id/tv_copyright_statement"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="版权声明"
+                    android:textSize="12sp"
+                    />
+
+                <View android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/actionsheet_gray"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    />
+
+                <TextView
+                    android:id="@+id/tv_about_us"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="关于我们"
+                    android:textSize="12sp"
+                    />
+
+            </LinearLayout>
+
+        </RelativeLayout>
     </ScrollView>
 </LinearLayout>
