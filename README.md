@@ -1,4 +1,4 @@
-# BiliParser
+# TiiyaVideo-提雅视频
 <h1>本项目创建初衷是用于爬取动漫网站视频资源，后续会增加除动漫以外的影视搜索。</h1><br>
 <b>使用语言：java、android
 <br>使用依赖库：
