@@ -130,14 +130,16 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                 toNextPage(msg);
             }else if(msg.what == 1){
                 toNextPage(msg);
+            }else if(msg.what == 2){
+                Toast.makeText(mContext, R.string.net_load_failed, Toast.LENGTH_SHORT).show();
+                waitDialog.dismiss();
             }
         }
     };
     private NetLoadListener.Callback callback = new NetLoadListener.Callback() {
         @Override
         public void onNetLoadFailed() {
-            Toast.makeText(mContext, R.string.net_load_failed, Toast.LENGTH_SHORT).show();
-            waitDialog.dismiss();
+            mHandler.sendMessage(Message.obtain(mHandler, 2));
         }
     };
     private PopupWindow spinnerPop;
@@ -238,20 +240,20 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         SoftKeyBoardListener.setListener(this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
             @Override
             public void keyBoardShow(int height) {
-                int scrollHeight = scrollView.getHeight();
-                int llHeight = rl_content_container.getHeight();
-                float llY = rl_content_container.getY();
-                float raiseHeight = height - (scrollHeight - llHeight - llY);
-                FrameLayout.LayoutParams llParams = (FrameLayout.LayoutParams) rl_content_container.getLayoutParams();
-                llParams.bottomMargin = (int) raiseHeight;
-                rl_content_container.setLayoutParams(llParams);
+//                int scrollHeight = scrollView.getHeight();
+//                int llHeight = rl_content_container.getHeight();
+//                float llY = rl_content_container.getY();
+//                float raiseHeight = height - (scrollHeight - llHeight - llY);
+//                FrameLayout.LayoutParams llParams = (FrameLayout.LayoutParams) rl_content_container.getLayoutParams();
+//                llParams.bottomMargin = (int) raiseHeight;
+//                rl_content_container.setLayoutParams(llParams);
             }
 
             @Override
             public void keyBoardHide(int height) {
-                FrameLayout.LayoutParams llParams = (FrameLayout.LayoutParams) rl_content_container.getLayoutParams();
-                llParams.bottomMargin = 0;
-                rl_content_container.setLayoutParams(llParams);
+//                FrameLayout.LayoutParams llParams = (FrameLayout.LayoutParams) rl_content_container.getLayoutParams();
+////                llParams.bottomMargin = 0;
+////                rl_content_container.setLayoutParams(llParams);
             }
         });
 
@@ -387,9 +389,12 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     }
 
     @OnClick({R.id.btn_translate, R.id.iv_delete,R.id.tv_select_search_type,
-    R.id.tv_copyright_statement,R.id.tv_about_us})
+    R.id.tv_copyright_statement,R.id.tv_about_us,R.id.btn_commend})
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.btn_commend:
+                startActivity(new Intent(mContext,RecommendActivity.class));
+                break;
             case R.id.tv_about_us:
                 startActivity(new Intent(mContext,AboutUsActivity.class));
                 break;
@@ -464,6 +469,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 
     @Override
     public void onGetSearchAnims(String result) {
+
     }
 
     @Override

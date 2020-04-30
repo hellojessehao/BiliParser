@@ -3,10 +3,27 @@
     <string name="set_video_height_js">javascript:window.customScript.log(\'===setVideoSize start===\');var iframe = document.getElementsByTagName(\'iframe\')[0];iframe.setAttribute(\'height\',\'%1$dpx\');window.customScript.log(\'===setVideoSize finished===\');</string>
     <string name="set_video_height_js_films_pc">javascript:window.customScript.log(\'===setVideoSize start===\');var macPlayer = document.getElementsByClassName(\'MacPlayer\')[0];macPlayer.setAttribute(\'width\',\'%1$dpx\');macPlayer.setAttribute(\'height\',\'%2$dpx\');window.customScript.log(\'===setVideoSize finished===\');</string>
     <string name="net_load_failed">啊喔~加载失败了，请重试~</string>
-    <string name="et_hint_text_for_anim">输入想看的动漫名称，如海贼王~。~</string>
-    <string name="et_hint_text_for_films_television">输入想看的影视剧名称，如鬼吹灯~。~</string>
+    <string name="et_hint_text_for_anim">输入想看的动漫名称，点击搜索~</string>
+    <string name="et_hint_text_for_films_television">输入想看的影视剧名称，点击搜索~</string>
     <string name="films_waiting_hint">影视剧加载较慢，请耐心等候~(约40秒钟)</string>
     <string name="copy_right_statement">本应用提供的资源均系收集于各大视频网站，本应用只提供资源展示服务，并不提供影片资源存储，也不参与录制、上传。\n\n若本应用收录的节目无意侵犯了贵司版权，请给本应用邮箱地址（JesseAndroid@126.com - 长按可复制）来信，我们会及时处理和回复，谢谢。\n\nCopyright © 2020 提雅视频</string>
     <string name="app_use_description">1.在首页搜索条中输入你想要搜索的片名，默认搜索的是动漫，如果你想搜索影视可点击搜索条上方的下拉菜单，选择“搜影视”；\n\n2.在搜索结果中点击你想看的片子，如果搜索结果一屏未展示完，可上拉加载更多；\n\n3.点击搜索结果后进入选集页面，可以点击你想要看的某集直接观看，也可以点击右上角的收藏按钮，先收藏之后再看；\n\n4、进入播放页面后，默认是小窗口播放，可以在播放窗口找到全屏按钮，点击即可全屏播放；\n\n5.播放页面的右上角可以直接跳集，有“上一集”、“下一集”、“跳集”三个选项，跳集可以跳转到任意集数。</string>
     <string name="app_features_description">1.视频（动漫、影视）搜索；\n\n2.视频观看；\n\n3.搜索历史记录；\n\n4.收藏夹；\n\n5.播放历史记录。</string>
+    <string name="data_is_null_hint">未请求到数据~请重试~</string>
+    <string name="data_list_is_empty">列表数据为空~</string>
+    <string name="banner_data_load_failed">banner数据加载失败</string>
+
+    <string-array name="anim_type_array">
+        <item>最新更新</item>
+        <item>日本动漫</item>
+        <item>国产动漫</item>
+        <item>美国动漫</item>
+        <item>动漫电影</item>
+    </string-array>
+    <string-array name="film_type_array">
+        <item>推荐</item>
+        <item>电影</item>
+        <item>电视剧</item>
+        <item>综艺</item>
+    </string-array>
 </resources>

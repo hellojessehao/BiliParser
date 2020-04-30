@@ -111,7 +111,7 @@
         android:textSize="14sp"
         android:textColor="@color/color_subtext_subtitle"
         android:text="导演：冯小刚"
-        android:maxEms="8"
+        android:maxEms="6"
         android:maxLines="1"
         android:ellipsize="end"
         />
@@ -126,7 +126,7 @@
         android:textColor="@color/color_subtext_subtitle"
         android:text="主演：阿凡达本人"
         android:layout_alignParentEnd="true"
-        android:maxEms="8"
+        android:maxEms="7"
         android:maxLines="1"
         android:ellipsize="end"
         />

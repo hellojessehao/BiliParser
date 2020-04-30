@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.android.jesse.biliparser.components.ImageViewRoundRect
+        android:id="@+id/iv_cover"
+        android:layout_width="match_parent"
+        android:layout_height="186dp"
+        android:src="@mipmap/emptyalbum"
+        android:scaleType="fitXY"
+        app:type="1"
+        app:roundRadius="8"
+        />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="海贼王"
+        android:textSize="16sp"
+        android:textColor="@color/color_maintext_title"
+        android:layout_marginTop="10dp"
+        />
+
+    <TextView
+        android:id="@+id/tv_section_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="24集"
+        android:textSize="13sp"
+        />
+
+</LinearLayout>

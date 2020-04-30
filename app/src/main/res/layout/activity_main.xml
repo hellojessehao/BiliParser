@@ -14,14 +14,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
-        android:fillViewport="true"
-        >
+        android:fillViewport="true">
 
         <RelativeLayout
             android:id="@+id/rl_content_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/iv_logo"
@@ -29,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:src="@mipmap/ic_logo_no_text"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="50dp"
                 />
 
             <TextView
@@ -128,18 +126,37 @@
                 </ScrollView>
             </RelativeLayout>
 
-            <Button
-                android:id="@+id/btn_translate"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="搜索"
-                android:background="@drawable/bg_orange_round_all_8"
-                android:textColor="@color/white"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
+                android:orientation="horizontal"
                 android:layout_below="@id/rl_search_history_container"
-                />
+                >
+                <Button
+                    android:id="@+id/btn_translate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:layout_marginTop="10dp"
+                    android:text="搜索"
+                    android:background="@drawable/bg_orange_round_all_8"
+                    android:textColor="@color/white"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    />
+                <Button
+                    android:id="@+id/btn_commend"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:layout_marginTop="10dp"
+                    android:text="推荐"
+                    android:background="@drawable/bg_white_strokeorange1_radius8"
+                    android:textColor="@color/color_selected_tags"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"

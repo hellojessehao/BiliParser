@@ -97,7 +97,6 @@ public class UpgradeActivity extends Activity {
                 }
                 break;
             case R.id.btn_cancel:
-                Beta.cancelDownload();
                 finish();
                 break;
         }

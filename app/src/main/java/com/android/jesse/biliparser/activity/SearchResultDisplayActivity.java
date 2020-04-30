@@ -85,6 +85,8 @@ public class SearchResultDisplayActivity extends SimpleActivity {
                     return;
                 }
                 parseNextPage(nextPageDoc);
+            }else if(msg.what == 1){
+                Toast.makeText(mContext, R.string.net_load_failed, Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -162,7 +164,7 @@ public class SearchResultDisplayActivity extends SimpleActivity {
     private NetLoadListener.Callback callback = new NetLoadListener.Callback() {
         @Override
         public void onNetLoadFailed() {
-            Toast.makeText(mContext, R.string.net_load_failed, Toast.LENGTH_SHORT).show();
+            mHandler.sendMessage(Message.obtain(mHandler, 1));
         }
     };
 

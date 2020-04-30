@@ -41,6 +41,15 @@ public class Constant {
     public static final int REQUEST_CAMERA_PERMISSION = 103;
     public static final int FLAG_SEARCH_ANIM = 1;
     public static final int FLAG_SEARCH_FILM_TELEVISION = 2;
+    public static final int ANIM_TYPE_MOST_LAST = 0;//最新更新
+    public static final int ANIM_TYPE_JAPEN = 1;//日本动漫
+    public static final int ANIM_TYPE_CHINA = 2;//国产动漫
+    public static final int ANIM_TYPE_AMERICA = 3;//美国动漫
+    public static final int ANIM_TYPE_FILM = 4;//动漫电影
+    public static final int FILM_TYPE_RECOMMEND = 0;//推荐
+    public static final int FILM_TYPE_FILM = 1;//电影
+    public static final int FILM_TYPE_TELEVISION = 2;//电视剧
+    public static final int FILM_TYPE_VARIETY = 3;//综艺
     //@}
 
     //@{String常量

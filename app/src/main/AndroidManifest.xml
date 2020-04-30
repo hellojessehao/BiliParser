@@ -54,6 +54,16 @@
         <activity android:name=".activity.RookieHelpActivity"
             android:screenOrientation="portrait"
             />
+        <activity android:name=".activity.RecommendActivity"
+            android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
+            />
+        <activity android:name=".activity.MoreAnimActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".activity.MoreFilmActivity"
+            android:screenOrientation="portrait"
+            />
 
         <!-- @{bugly在线升级 -->
         <activity

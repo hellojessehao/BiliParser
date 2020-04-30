@@ -113,14 +113,16 @@ public class ChooseSectionActivity extends SimpleActivity {
                 Toast.makeText(mContext, "已取消", Toast.LENGTH_SHORT).show();
             }else if(msg.what == 6){
                 Toast.makeText(mContext, "请重试", Toast.LENGTH_SHORT).show();
+            }else if(msg.what == 7){
+                waitDialog.dismiss();
+                Toast.makeText(mContext, R.string.net_load_failed, Toast.LENGTH_SHORT).show();
             }
         }
     };
     private NetLoadListener.Callback callback = new NetLoadListener.Callback() {
         @Override
         public void onNetLoadFailed() {
-            waitDialog.dismiss();
-            Toast.makeText(mContext, R.string.net_load_failed, Toast.LENGTH_SHORT).show();
+            mHandler.sendMessage(Message.obtain(mHandler, 7));
         }
     };
 
@@ -203,7 +205,6 @@ public class ChooseSectionActivity extends SimpleActivity {
 
     @Override
     protected void initEventAndData() {
-        //TODO:广播监听器 动态修改集数数据
         if(getIntent() != null){
             title = getIntent().getStringExtra(Constant.KEY_TITLE);
             if(!TextUtils.isEmpty(title)){
@@ -348,13 +349,16 @@ public class ChooseSectionActivity extends SimpleActivity {
 
     //解析document并填充数据到页面
     private void parseDocument(Document document){
+        SearchResultBean searchResultBean = (SearchResultBean) Session.getSession().request(Constant.KEY_RESULT_BEAN);
         if(searchType == Constant.FLAG_SEARCH_ANIM){
             //介绍信息
             Element wholeData = document.selectFirst("div.fire.l");
             Element img = wholeData.selectFirst("img[src][alt]");
             String cover = img.attr("src");
-            LogUtils.d(TAG+" cover = "+cover);
             GlideUtil.getInstance().loadImg(mContext,cover,iv_cover);
+            if(TextUtils.isEmpty(searchResultBean.getCover())){
+                searchResultBean.setCover(cover);
+            }
             Element infos = wholeData.selectFirst("div.alex");
             Elements ps = infos.select("p");
             Element p0 = ps.get(0);
@@ -362,6 +366,9 @@ public class ChooseSectionActivity extends SimpleActivity {
             String alias = p0.text();
             String updateInfo = p1.text();
             tv_alias.setText(alias);
+            if(TextUtils.isEmpty(searchResultBean.getAlias())){
+                searchResultBean.setAlias(alias);
+            }
             tv_update_info.setText(updateInfo);
             Element infoList = wholeData.selectFirst("div.alex");
             Elements spans = infoList.select("span");
@@ -374,6 +381,9 @@ public class ChooseSectionActivity extends SimpleActivity {
                 type.append(aType.text()+" ");
             }
             tv_type.setText("类型："+type.toString());
+            if(TextUtils.isEmpty(searchResultBean.getInfos())){
+                searchResultBean.setInfos(updateInfo+" "+type.toString());
+            }
             String time = spans.get(2).selectFirst("a").text();
             tv_time.setText("年代："+time);
             StringBuilder tags = new StringBuilder();
@@ -403,17 +413,29 @@ public class ChooseSectionActivity extends SimpleActivity {
                 Element imgTag = imgContainElement.selectFirst("img.loading");
                 String cover = imgTag.attr("src");
                 GlideUtil.getInstance().loadImg(mContext,cover,iv_cover);
+                if(TextUtils.isEmpty(searchResultBean.getCover())){
+                    searchResultBean.setCover(cover);
+                }
             }
             Element infoContainerElement = document.selectFirst("div.vod-n-l");
             String title = infoContainerElement.selectFirst("h1").text();
             tv_alias.setText(title);
+            if(TextUtils.isEmpty(searchResultBean.getAlias())){
+                searchResultBean.setAlias(title);
+            }
             Element areaP = infoContainerElement.selectFirst("p.vw20");
             Element areaA = areaP.selectFirst("a");
             String area = areaA.text();
             tv_area.setText("地区："+area);
+            if(TextUtils.isEmpty(searchResultBean.getArea())){
+                searchResultBean.setArea(area);
+            }
             Element typeP = infoContainerElement.selectFirst("p.vw60");
             String type = typeP.text().replaceAll("\"","");
             tv_type.setText(type);
+            if(TextUtils.isEmpty(searchResultBean.getType())){
+                searchResultBean.setType(type);
+            }
             Element versionP = infoContainerElement.selectFirst("p.vw38");
             tv_time.setText(versionP.text().replaceAll("\"",""));
             tv_tags.setVisibility(View.GONE);//播放量需要加载js才能出来
@@ -432,11 +454,46 @@ public class ChooseSectionActivity extends SimpleActivity {
                         stringBuilder.append(actorAList.get(i).text()+" ");
                     }
                     tv_indexes.setText("主演："+stringBuilder.toString());
+                    if(Utils.isListEmpty(searchResultBean.getActorList())){
+                        List<String> actorList = new ArrayList<>();
+                        for(int j=0;j<actorAList.size();j++){
+                            String actor = actorAList.get(j).text();
+                            actorList.add(actor);
+                        }
+                        searchResultBean.setActorList(actorList);
+                    }
                 }
             }
+            Element directorP = infoContainerElement.selectFirst("p.vw30");
+            if(directorP != null && Utils.isListEmpty(searchResultBean.getDirectorList())){
+                Elements directorAList = directorP.select("a[href]");
+                if(directorAList != null && directorAList.size() > 0) {
+                    List<String> directorList = new ArrayList<>();
+                    for (int i = 0; i < directorAList.size(); i++) {
+                        if (i > 1) {//只取两个导演
+                            break;
+                        }
+                        directorList.add(directorAList.get(i).text());
+                    }
+                    searchResultBean.setDirectorList(directorList);
+                }
+            }
+            if(TextUtils.isEmpty(searchResultBean.getPublishDate())){
+                Element publishP = infoContainerElement.selectFirst("p.ptxt");
+                Element publishA = publishP.selectFirst("a[href]");
+                searchResultBean.setPublishDate("上映:"+publishA.text());
+            }
+            if(TextUtils.isEmpty(searchResultBean.getUpdateDate())){
+                Element updateP = infoContainerElement.select("p.vw30").get(2);
+                searchResultBean.setUpdateDate(updateP.text().replaceAll("\"",""));
+            }
+
             Element descP = infoContainerElement.selectFirst("p.v-js");
             String desc = descP.text().replaceAll("\"","");
             tv_update_info.setText(desc);
+            if(TextUtils.isEmpty(searchResultBean.getDesc())){
+                searchResultBean.setDesc(desc);
+            }
 
             Element sectionListElement = document.selectFirst("ul.player_list");
             if(sectionListElement == null){
@@ -459,7 +516,7 @@ public class ChooseSectionActivity extends SimpleActivity {
             }
             Collections.reverse(sectionBeanList);
         }
-
+        Session.getSession().put(Constant.KEY_RESULT_BEAN,searchResultBean);
         adapter.notifyDataSetChanged();
         waitDialog.dismiss();
     }

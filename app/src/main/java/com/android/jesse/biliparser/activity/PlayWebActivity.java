@@ -90,7 +90,7 @@ public class PlayWebActivity extends SimpleActivity implements View.OnClickListe
     protected String url;
     private boolean needWaitParse = false;
     private WaitDialog waitDialog;
-    private final int TIMEOUT_MILLS = 5 * 1000;
+    private final int TIMEOUT_MILLS = 60 * 1000;
     private int searchType = Constant.FLAG_SEARCH_ANIM;
     private PopupWindow spinnerPop;
     private List<SectionBean> sectionBeanList;

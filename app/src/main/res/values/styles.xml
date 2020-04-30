@@ -56,4 +56,11 @@
         </attr>
     </declare-styleable>
 
+    <style name="v_driver_1_match_common">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/color_most_shallow_background</item>
+        <item name="android:layout_marginTop">10dp</item>
+    </style>
+
 </resources>
