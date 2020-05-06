@@ -131,6 +131,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
             }else if(msg.what == 1){
                 toNextPage(msg);
             }else if(msg.what == 2){
+                NetLoadListener.getInstance().stopListening();
                 Toast.makeText(mContext, R.string.net_load_failed, Toast.LENGTH_SHORT).show();
                 waitDialog.dismiss();
             }
@@ -139,7 +140,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     private NetLoadListener.Callback callback = new NetLoadListener.Callback() {
         @Override
         public void onNetLoadFailed() {
-            mHandler.sendMessage(Message.obtain(mHandler, 2));
+            mHandler.sendEmptyMessage(2);
         }
     };
     private PopupWindow spinnerPop;
@@ -427,12 +428,11 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                     break;
                 }
                 waitDialog.show();
+                NetLoadListener.getInstance().startListening(callback);
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            NetLoadListener.getInstance().startListening(callback);
-
                             switch (searchType){
                                 case Constant.FLAG_SEARCH_ANIM:
                                     Connection connection = Jsoup.connect(Constant.SAKURA_NEXT_PAGE_BASE_URL);
@@ -453,8 +453,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 
                         } catch (IOException ioe) {
                             ioe.printStackTrace();
-                            waitDialog.dismiss();
-                            NetLoadListener.getInstance().stopListening();
+                            mHandler.sendEmptyMessage(2);
                         }
                     }
                 }).start();

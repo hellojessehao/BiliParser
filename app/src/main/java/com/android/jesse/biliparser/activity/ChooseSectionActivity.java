@@ -122,7 +122,7 @@ public class ChooseSectionActivity extends SimpleActivity {
     private NetLoadListener.Callback callback = new NetLoadListener.Callback() {
         @Override
         public void onNetLoadFailed() {
-            mHandler.sendMessage(Message.obtain(mHandler, 7));
+            mHandler.sendEmptyMessage(7);
         }
     };
 
@@ -327,11 +327,11 @@ public class ChooseSectionActivity extends SimpleActivity {
             return;
         }
         waitDialog.show();
+        NetLoadListener.getInstance().startListening(callback);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try{
-                    NetLoadListener.getInstance().startListening(callback);
                     Connection connection = Jsoup.connect(url);
                     connection.userAgent(Constant.USER_AGENT_FORPC);
 //                    connection.data("searchword",word);
@@ -350,6 +350,10 @@ public class ChooseSectionActivity extends SimpleActivity {
     //解析document并填充数据到页面
     private void parseDocument(Document document){
         SearchResultBean searchResultBean = (SearchResultBean) Session.getSession().request(Constant.KEY_RESULT_BEAN);
+        if(searchResultBean == null){
+            LogUtils.e(TAG+" searchResultBean is null,put new one");
+            searchResultBean = new SearchResultBean();
+        }
         if(searchType == Constant.FLAG_SEARCH_ANIM){
             //介绍信息
             Element wholeData = document.selectFirst("div.fire.l");

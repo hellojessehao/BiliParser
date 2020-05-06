@@ -52,12 +52,10 @@ public class ImageViewRoundRect extends AppCompatImageView {
 
     public ImageViewRoundRect(Context context) {
         this(context, null);
-        // TODO Auto-generated constructor stub
     }
 
     public ImageViewRoundRect(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
-        // TODO Auto-generated constructor stub
     }
 
     public ImageViewRoundRect(Context context, AttributeSet attrs, int defStyle) {
@@ -77,7 +75,6 @@ public class ImageViewRoundRect extends AppCompatImageView {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        // TODO Auto-generated method stub
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         // 如果是绘制圆形，则强制宽高大小一致
         if (mType == TYPE_CIRCLE) {
@@ -107,7 +104,6 @@ public class ImageViewRoundRect extends AppCompatImageView {
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        // TODO Auto-generated method stub
         super.onSizeChanged(w, h, oldw, oldh);
         mRect = new RectF(0, 0, getWidth(), getHeight());
     }

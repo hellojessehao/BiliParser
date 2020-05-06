@@ -92,7 +92,7 @@ public class MoreFilmActivity extends SimpleActivity {
     private NetLoadListener.Callback callback = new NetLoadListener.Callback() {
         @Override
         public void onNetLoadFailed() {
-            mHandler.sendMessage(Message.obtain(mHandler, 1));
+            mHandler.sendEmptyMessage(1);
         }
     };
 

@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.android.jesse.biliparser.R;
 import com.android.jesse.biliparser.base.App;
+import com.android.jesse.biliparser.utils.NetLoadListener;
 import com.android.jesse.biliparser.utils.Utils;
 
 import butterknife.BindView;
@@ -105,6 +106,7 @@ public abstract class SimpleActivity extends SupportActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        NetLoadListener.getInstance().removeLastCallback();
         App.getInstance().removeActivity(this);
         mUnBinder.unbind();
         System.gc();

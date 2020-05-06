@@ -164,16 +164,16 @@ public class SearchResultDisplayActivity extends SimpleActivity {
     private NetLoadListener.Callback callback = new NetLoadListener.Callback() {
         @Override
         public void onNetLoadFailed() {
-            mHandler.sendMessage(Message.obtain(mHandler, 1));
+            mHandler.sendEmptyMessage(1);
         }
     };
 
     private void getData(String url){
+        NetLoadListener.getInstance().startListening(callback);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    NetLoadListener.getInstance().startListening(callback);
                     Connection connection = Jsoup.connect(url);
                     connection.userAgent(Constant.USER_AGENT_FORPC);
 //                    connection.postDataCharset("GB2312");//关键中的关键！！

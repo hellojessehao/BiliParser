@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.jesse.biliparser.utils.NetLoadListener;
 import com.android.jesse.biliparser.utils.Utils;
 
 import butterknife.ButterKnife;
@@ -57,6 +58,7 @@ public abstract class SimpleFragment extends SupportFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        NetLoadListener.getInstance().removeLastCallback();
         mUnBinder.unbind();
     }
 
