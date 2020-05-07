@@ -103,31 +103,7 @@ public class MoreFilmActivity extends SimpleActivity {
             LogUtils.d(TAG+" url = "+url);
         }
         waitDialog = new WaitDialog(mContext,R.style.Dialog_Translucent_Background);
-        adapter = new MoreAnimAdapter(mContext,itemBeanList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        recyclerView.addItemDecoration(new OffsetRecyclerDivider(0,SizeUtils.dp2px(15)));
-        recyclerView.setAdapter(adapter);
-        if(!TextUtils.isEmpty(url)){
-            waitDialog.show();
-            NetLoadListener.getInstance().startListening(callback);
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Connection connection = Jsoup.connect(url);
-                        connection.userAgent(Constant.USER_AGENT_FORPC);
-                        Document document = connection.get();
-                        mHandler.sendMessage(Message.obtain(mHandler, 0, document));
-                    } catch (IOException ioe) {
-                        ioe.printStackTrace();
-                        LogUtils.e(TAG + " ioe : " + ioe.toString());
-                        mHandler.sendMessage(Message.obtain(mHandler, 1));
-                    }
-                }
-            }).start();
-        }else{
-            setEmptyState();
-        }
+
     }
 
     private void setEmptyState(){

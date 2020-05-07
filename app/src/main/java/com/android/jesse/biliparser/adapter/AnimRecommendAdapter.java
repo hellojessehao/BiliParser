@@ -1,6 +1,7 @@
 package com.android.jesse.biliparser.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.android.jesse.biliparser.R;
+import com.android.jesse.biliparser.activity.MoreAnimActivity;
+import com.android.jesse.biliparser.base.Constant;
 import com.android.jesse.biliparser.network.component.OffsetRecyclerDivider;
 import com.android.jesse.biliparser.network.model.bean.AnimRecommendItemBean;
 import com.blankj.utilcode.util.SizeUtils;
@@ -49,10 +52,10 @@ public class AnimRecommendAdapter extends RecyclerView.Adapter<AnimRecommendAdap
         viewHolder.tv_more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "暂未开放", Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(mContext,MoreAnimActivity.class);
-//                intent.putExtra(Constant.KEY_URL,itemBean.getMoreUrl());
-//                mContext.startActivity(intent);
+                Intent intent = new Intent(mContext,MoreAnimActivity.class);
+                intent.putExtra(Constant.KEY_TYPE_ID,itemBean.getTypeId());
+                intent.putExtra(Constant.KEY_URL,itemBean.getMoreUrl());
+                mContext.startActivity(intent);
             }
         });
         viewHolder.recyclerView.setLayoutManager(new GridLayoutManager(mContext,3));

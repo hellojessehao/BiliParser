@@ -1,38 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <include layout="@layout/common_titlebar"/>
+    <include layout="@layout/common_titlebar" />
 
-    <RelativeLayout
-        android:id="@+id/rl_waiting_live"
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        app:srlEnableLoadMore="true"
+        app:srlEnableRefresh="false">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <RelativeLayout
+            android:id="@+id/rl_waiting_live"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="15dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:nestedScrollingEnabled="false" />
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/tv_no_data"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="14.5dp"
-            android:drawableTop="@mipmap/ic_no_search_result"
-            android:drawablePadding="9dp"
-            android:gravity="center"
-            android:text="啊噢~没有找到任何内容~"
-            android:textColor="@color/color_selected_tags"
-            android:textSize="12sp"
-            android:visibility="gone" />
-    </RelativeLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="5dp"
+                android:nestedScrollingEnabled="false" />
 
+            <TextView
+                android:id="@+id/tv_no_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="14.5dp"
+                android:drawableTop="@mipmap/ic_no_search_result"
+                android:drawablePadding="9dp"
+                android:gravity="center"
+                android:text="啊噢~没有找到任何内容~"
+                android:textColor="@color/color_selected_tags"
+                android:textSize="12sp"
+                android:visibility="gone" />
+        </RelativeLayout>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>

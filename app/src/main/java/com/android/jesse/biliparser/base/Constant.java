@@ -15,6 +15,10 @@ public class Constant {
     public static final String BILI_SEARCH_URL = "https://search.bilibili.com/";//后面拼接上想要搜索的内容 https://search.bilibili.com/all?keyword=
     public static final String SAKURA_SEARCH_URL = "http://www.imomoe.in/";//樱花动漫搜索链接
     public static final String SAKURA_NEXT_PAGE_BASE_URL = "http://www.imomoe.in/search.asp";//樱花动漫下一页基础链接
+    public static final String SAKURA_CATEORY_BASE_URL = "http://www.imomoe.in/so.asp";//樱花动漫分类基础链接
+    public static final String SAKURA_MORE_JP_ANIM_URL = "http://www.imomoe.in/so.asp?page=1&dq=%C8%D5%B1%BE&pl=time";//日漫更多
+    public static final String SAKURA_MORE_CHINA_ANIM_URL = "http://www.imomoe.in/so.asp?page=1&dq=%B4%F3%C2%BD&pl=time";//国漫更多
+    public static final String SAKURA_MORE_AMERICA_ANIM_URL = "http://www.imomoe.in/so.asp?page=1&dq=%C3%C0%B9%FA&pl=time";//美漫更多
     public static final String JIJI_SEARCH_URL = "https://www.jijidy.com/index.php?m=vod-search";//吉吉影视搜索接口 搜索词放进wd参数
     public static final String JIJI_BASE_URL = "https://www.jijidy.com/";
     //@}
@@ -69,6 +73,7 @@ public class Constant {
     public static final String SPKEY_SEARCH_TYPE = "spkey_search_type";
     public static final String KEY_SECTION_BEAN_LIST = "key_section_bean_list";
     public static final String SPKEY_IS_SHOULD_VERSION_CHECK = "spkey_is_should_version_check";
+    public static final String KEY_TYPE_ID = "key_type_id";
     //@}
 
     //@{BROADCAST ACTIONS
