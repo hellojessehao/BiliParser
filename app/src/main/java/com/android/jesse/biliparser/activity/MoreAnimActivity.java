@@ -321,6 +321,7 @@ public class MoreAnimActivity extends SimpleActivity {
                 }
             }
             searchResultBeanList.addAll(tempResultBeanList);
+            lastPageCodeList.addAll(tempCodeList);
             if(!Utils.isListEmpty(searchResultBeanList)){
                 refreshLayout.finishLoadMore();
                 adapter.notifyDataSetChanged();
@@ -463,6 +464,7 @@ public class MoreAnimActivity extends SimpleActivity {
                 }
             }
             searchResultBeanList.addAll(tempResultBeanList);
+            lastPageCodeList.addAll(tempCodeList);
             if (!Utils.isListEmpty(searchResultBeanList)) {
                 refreshLayout.finishLoadMore();
                 adapter.notifyDataSetChanged();

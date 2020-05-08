@@ -25,7 +25,16 @@ public class SearchResultBean {
     private String updateDate;
     private String score;//评分
     private int searchType;//搜索类型 动漫 或 影视剧
+    private String hotValue;//影片的热度
     //@}
+
+    public String getHotValue() {
+        return hotValue;
+    }
+
+    public void setHotValue(String hotValue) {
+        this.hotValue = hotValue;
+    }
 
     public int getSearchType() {
         return searchType;
@@ -165,6 +174,7 @@ public class SearchResultBean {
                 ", updateDate='" + updateDate + '\'' +
                 ", score='" + score + '\'' +
                 ", searchType=" + searchType +
+                ", hotValue='" + hotValue + '\'' +
                 '}';
     }
 }

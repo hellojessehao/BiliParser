@@ -54,10 +54,10 @@ public class FilmRecommendAdapter extends RecyclerView.Adapter<FilmRecommendAdap
         viewHolder.tv_more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "暂未开放", Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(mContext,MoreFilmActivity.class);
-//                intent.putExtra(Constant.KEY_URL,itemBean.getMoreUrl());
-//                mContext.startActivity(intent);
+                Intent intent = new Intent(mContext,MoreFilmActivity.class);
+                intent.putExtra(Constant.KEY_URL,itemBean.getMoreUrl());
+                intent.putExtra(Constant.KEY_TYPE_ID,itemBean.getTypeId());
+                mContext.startActivity(intent);
             }
         });
         viewHolder.recyclerView.setLayoutManager(new GridLayoutManager(mContext,3));

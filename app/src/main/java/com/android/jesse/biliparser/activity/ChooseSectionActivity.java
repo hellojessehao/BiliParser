@@ -437,6 +437,7 @@ public class ChooseSectionActivity extends SimpleActivity {
             Element typeP = infoContainerElement.selectFirst("p.vw60");
             String type = typeP.text().replaceAll("\"","");
             tv_type.setText(type);
+            searchResultBean.setType(type);//解决更多影视类型不对问题
             if(TextUtils.isEmpty(searchResultBean.getType())){
                 searchResultBean.setType(type);
             }
@@ -504,6 +505,7 @@ public class ChooseSectionActivity extends SimpleActivity {
                 tv_no_data.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
                 LogUtils.e(TAG+" 没有选集信息");
+                waitDialog.dismiss();
                 return;
             }
             Elements aList = sectionListElement.select("a[href]");

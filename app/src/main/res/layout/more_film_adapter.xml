@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="日本动漫"
+        android:textColor="@color/color_subtext_subtitle"
+        android:textSize="16sp"
+        />
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="青春猪猪少年不会遇见兔女郎学姐"
+        android:textColor="@color/color_maintext_title"
+        android:textSize="16sp"
+        android:maxEms="9"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:layout_marginStart="10dp"
+        />
+
+    <TextView
+        android:id="@+id/tv_hot_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="30654"
+        android:layout_marginStart="15dp"
+        android:textColor="@color/color_selected_tags"
+        android:textSize="16sp"
+        android:drawableStart="@mipmap/ic_hot"
+        android:drawablePadding="5dp"
+        />
+
+</LinearLayout>

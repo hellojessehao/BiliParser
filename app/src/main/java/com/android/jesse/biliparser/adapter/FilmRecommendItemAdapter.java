@@ -46,7 +46,7 @@ public class FilmRecommendItemAdapter extends RecyclerView.Adapter<FilmRecommend
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        return new ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.anim_recommend_item_adapter,null,false));
+        return new ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.film_recommend_item_adapter,null,false));
     }
 
     @Override
