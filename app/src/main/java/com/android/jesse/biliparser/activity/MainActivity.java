@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -16,10 +17,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
@@ -145,8 +149,10 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     };
     private PopupWindow spinnerPop;
     private Dialog clearHintDialog;
-    private int searchType = Constant.FLAG_SEARCH_ANIM;
+    private int searchType = Constant.FLAG_SEARCH_FILM_TELEVISION;
     private PopupWindow selectTypePop;
+    private PopupWindow tagDeletePop;
+    private int longClickPosition = -1;
 
     @Override
     protected String getTitleName() {
@@ -171,12 +177,27 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         iv_right.setVisibility(View.VISIBLE);
         iv_right.setImageResource(R.mipmap.ic_main_menu);
         tv_appname.setTypeface(Typeface.createFromAsset(getAssets(),"font"+File.separator+"yahei_2.ttf"));
-        searchType = SharePreferenceUtil.getInt(Constant.SPKEY_SEARCH_TYPE,Constant.FLAG_SEARCH_ANIM);
+        searchType = SharePreferenceUtil.getInt(Constant.SPKEY_SEARCH_TYPE,Constant.FLAG_SEARCH_FILM_TELEVISION);
         if(searchType == Constant.FLAG_SEARCH_ANIM){
             tv_select_search_type.setText("搜动漫");
+            et_word.setHint(R.string.et_hint_text_for_anim);
         }else if(searchType == Constant.FLAG_SEARCH_FILM_TELEVISION){
             tv_select_search_type.setText("搜影视");
+            et_word.setHint(R.string.et_hint_text_for_films_television);
         }
+        initSearchEdit();
+        initSpinnerPop();
+        initSearchTypePop();
+        initSearchHistory();
+        initKeyboardHeightAutoFit();
+        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(mContext, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 101);
+        }
+        waitDialog = new WaitDialog(mContext, R.style.Dialog_Translucent_Background);
+    }
+
+    private void initSearchEdit(){
+        //设置软键盘的回车触发搜索
         et_word.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -192,14 +213,47 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                 return false;
             }
         });
-        initSpinnerPop();
-        initSearchTypePop();
-        initSearchHistory();
-        initKeyboardHeightAutoFit();
-        if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(mContext, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 101);
-        }
-        waitDialog = new WaitDialog(mContext, R.style.Dialog_Translucent_Background);
+        //设置清除搜索内容按钮点击事件
+        et_word.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // et.getCompoundDrawables()得到一个长度为4的数组，分别表示左右上下四张图片
+                Drawable drawable = et_word.getCompoundDrawables()[2];
+                //如果右边没有图片，不再处理
+                if (drawable == null)
+                    return false;
+                //如果不是按下事件，不再处理
+                if (event.getAction() != MotionEvent.ACTION_UP)
+                    return false;
+                if (event.getX() > et_word.getWidth()
+                        - et_word.getPaddingRight()
+                        - drawable.getIntrinsicWidth()) {
+                    et_word.setText("");
+                    et_word.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_search, 0, 0, 0);
+                }
+                return false;
+            }
+        });
+        et_word.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!TextUtils.isEmpty(s.toString())) {
+                    et_word.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_search, 0, R.mipmap.ic_close, 0);
+                } else {
+                    et_word.setCompoundDrawablesWithIntrinsicBounds(R.mipmap.ic_search, 0, 0, 0);
+                }
+            }
+        });
     }
 
     /**
@@ -279,6 +333,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         if (Utils.isListEmpty(searchWordList)) {
             rl_search_history_container.setVisibility(View.GONE);
         } else {
+            initSearchDeletePop();
             rl_search_history_container.setVisibility(View.VISIBLE);
             TagAdapter<String> tagAdapter = new TagAdapter<String>(searchWordList) {
                 @Override
@@ -286,20 +341,66 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                     TextView tv = (TextView) LayoutInflater.from(mContext).inflate(R.layout.listory_tag_layout,
                             fl_search_history, false);
                     tv.setText(s);
+                    tv.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            longClickPosition = position;
+                            tagDeletePop.showAsDropDown(v, 0, 0);
+                            return true;
+                        }
+                    });
+                    tv.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            et_word.setText(searchWordList.get(position));
+                            et_word.setSelection(et_word.length());
+                            btn_translate.performClick();
+                        }
+                    });
                     return tv;
                 }
             };
             fl_search_history.setAdapter(tagAdapter);
-            fl_search_history.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
-                @Override
-                public boolean onTagClick(View view, int position, FlowLayout parent) {
-                    et_word.setText(searchWordList.get(position));
-                    et_word.setSelection(et_word.length());
-                    btn_translate.performClick();
-                    return false;
-                }
-            });
+//            fl_search_history.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
+//                @Override
+//                public boolean onTagClick(View view, int position, FlowLayout parent) {
+//                    et_word.setText(searchWordList.get(position));
+//                    et_word.setSelection(et_word.length());
+//                    btn_translate.performClick();
+//                    return true;
+//                }
+//            });
         }
+    }
+
+    //初始化历史记录长按删除Popupwindow
+    private void initSearchDeletePop(){
+        tagDeletePop = new PopupWindow(mContext);
+        View contentView = LayoutInflater.from(mContext).inflate(R.layout.search_history_long_click_pop,null,false);
+        tagDeletePop.setContentView(contentView);
+        tagDeletePop.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        tagDeletePop.setAnimationStyle(R.style.WindowStyle);
+        tagDeletePop.setOutsideTouchable(true);
+        tagDeletePop.setWidth(SizeUtils.dp2px(50));
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tagDeletePop.dismiss();
+                switch (v.getId()){
+                    case R.id.tv_delete:
+                        if(longClickPosition < 0){
+                            break;
+                        }
+                        List<String> historyList = getHistoryCacheList();
+                        historyList.remove(longClickPosition);
+                        SharePreferenceUtil.put(Constant.SPKEY_SEARCH_HISTORY,new Gson().toJson(historyList));
+                        initSearchHistory();
+                        break;
+                }
+            }
+        };
+        TextView tv_delete = contentView.findViewById(R.id.tv_delete);
+        tv_delete.setOnClickListener(onClickListener);
     }
 
     private List<String> getHistoryCacheList() {

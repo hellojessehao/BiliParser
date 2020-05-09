@@ -41,6 +41,7 @@ import com.android.jesse.biliparser.network.base.SimpleActivity;
 import com.android.jesse.biliparser.network.model.bean.SearchResultBean;
 import com.android.jesse.biliparser.network.model.bean.SectionBean;
 import com.android.jesse.biliparser.network.util.ToastUtil;
+import com.android.jesse.biliparser.utils.DateUtil;
 import com.android.jesse.biliparser.utils.LogUtils;
 import com.android.jesse.biliparser.utils.Session;
 import com.android.jesse.biliparser.utils.Utils;
@@ -233,7 +234,7 @@ public class PlayWebActivity extends SimpleActivity implements View.OnClickListe
                     LogUtils.e(TAG + " updateIndexByVideoId failed");
                 }
                 //收藏
-                int result = DbHelper.getInstance().updateCollectionIndexByVideoId(currentIndex + 1, videoId);
+                int result = DbHelper.getInstance().updateCollectionIndexByVideoId(currentIndex + 1,DateUtil.getDefaultTime(), videoId);
                 if (result > 0) {
                     LogUtils.i(TAG + " updateCollectionIndexByVideoId success");
                 } else {

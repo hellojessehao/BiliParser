@@ -33,7 +33,7 @@ public interface CollectionDao {
     @Query("DELETE FROM collection where videoId = :videoId")
     int deleteCollectionByVideoId(int videoId);
 
-    @Query("UPDATE collection SET currentIndex = :currentIndex where videoId = :videoId")
-    int updateCollectionIndexByVideoId(int currentIndex, int videoId);
+    @Query("UPDATE collection SET currentIndex = :currentIndex,date = :date where videoId = :videoId")
+    int updateCollectionIndexByVideoId(int currentIndex, String date,int videoId);
 
 }

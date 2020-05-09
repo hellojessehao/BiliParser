@@ -271,7 +271,7 @@ public class ChooseSectionActivity extends SimpleActivity {
                         if(collectFlag == 1 && !TextUtils.isEmpty(title)){
                             int videoId = title.hashCode();
                             LogUtils.i(TAG+" videoId = "+videoId);
-                            int result = DbHelper.getInstance().updateCollectionIndexByVideoId(currentIndex,videoId);
+                            int result = DbHelper.getInstance().updateCollectionIndexByVideoId(currentIndex,DateUtil.getDefaultTime(),videoId);
                             if(result > 0){
                                 LogUtils.i(TAG+" updateCollectionIndexByVideoId success");
                             }else{

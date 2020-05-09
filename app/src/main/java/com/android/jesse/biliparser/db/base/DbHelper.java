@@ -99,7 +99,7 @@ public class DbHelper implements HistoryVideoDao,CollectionDao {
     }
 
     @Override
-    public int updateCollectionIndexByVideoId(int currentIndex, int videoId) {
-        return collectionDao.updateCollectionIndexByVideoId(currentIndex,videoId);
+    public int updateCollectionIndexByVideoId(int currentIndex, String date ,int videoId) {
+        return collectionDao.updateCollectionIndexByVideoId(currentIndex,date,videoId);
     }
 }
