@@ -74,6 +74,7 @@ public class Constant {
     public static final String KEY_SECTION_BEAN_LIST = "key_section_bean_list";
     public static final String SPKEY_IS_SHOULD_VERSION_CHECK = "spkey_is_should_version_check";
     public static final String KEY_TYPE_ID = "key_type_id";
+    public static final String SPKEY_ENTER_APP_COUNT = "spkey_enter_app_count";//保存进入APP的次数
     //@}
 
     //@{BROADCAST ACTIONS

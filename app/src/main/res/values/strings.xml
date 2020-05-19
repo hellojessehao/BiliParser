@@ -12,6 +12,7 @@
     <string name="data_is_null_hint">未请求到数据~请重试~</string>
     <string name="data_list_is_empty">列表数据为空~</string>
     <string name="banner_data_load_failed">banner数据加载失败</string>
+    <string name="hint_longclick_expand_desc">长按可显示全部描述~。~</string>
 
     <string-array name="anim_type_array">
         <item>最新更新</item>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -13,6 +14,7 @@ import com.android.jesse.biliparser.R;
 import com.android.jesse.biliparser.base.Constant;
 import com.android.jesse.biliparser.network.model.bean.SearchResultBean;
 import com.android.jesse.biliparser.utils.GlideUtil;
+import com.android.jesse.biliparser.utils.LogUtils;
 import com.android.jesse.biliparser.utils.Utils;
 import com.blankj.utilcode.util.SizeUtils;
 
@@ -72,6 +74,16 @@ public class SearchResultAdapter extends RecyclerView.Adapter{
                     }
                 }
             });
+            animViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    RecyclerView.LayoutParams expandParams = (RecyclerView.LayoutParams) animViewHolder.itemView.getLayoutParams();
+                    expandParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    animViewHolder.itemView.setLayoutParams(expandParams);
+                    animViewHolder.tv_desc.setMaxLines(10);
+                    return true;
+                }
+            });
         }else if(searchType == Constant.FLAG_SEARCH_FILM_TELEVISION){
             FilmViewHolder filmViewHolder = (FilmViewHolder) viewHolder;
             GlideUtil.getInstance().loadImg(mContext,searchResultBean.getCover(),filmViewHolder.iv_cover);
@@ -114,6 +126,16 @@ public class SearchResultAdapter extends RecyclerView.Adapter{
                     if(onItemClickListener != null){
                         onItemClickListener.onItemClick(searchResultBean);
                     }
+                }
+            });
+            filmViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    RecyclerView.LayoutParams expandParams = (RecyclerView.LayoutParams) filmViewHolder.itemView.getLayoutParams();
+                    expandParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    filmViewHolder.itemView.setLayoutParams(expandParams);
+                    filmViewHolder.tv_desc.setMaxLines(10);
+                    return true;
                 }
             });
         }

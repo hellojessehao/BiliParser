@@ -8,7 +8,7 @@
     <com.android.jesse.biliparser.components.ImageViewRoundRect
         android:id="@+id/iv_cover"
         android:layout_width="120dp"
-        android:layout_height="match_parent"
+        android:layout_height="180dp"
         android:src="@mipmap/emptyalbum"
         android:scaleType="fitXY"
         app:roundRadius="8"

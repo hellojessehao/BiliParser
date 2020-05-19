@@ -83,6 +83,9 @@ public class App extends Application implements Application.ActivityLifecycleCal
         SharePreferenceUtil.init(mContext);
         //初始化buglySDK并检测是否有新版本
         initBugly();
+        //设置进入APP的次数加1
+        int enterCount = SharePreferenceUtil.getInt(Constant.SPKEY_ENTER_APP_COUNT,0);
+        SharePreferenceUtil.put(Constant.SPKEY_ENTER_APP_COUNT,++enterCount);
     }
 
     private void initBugly(){

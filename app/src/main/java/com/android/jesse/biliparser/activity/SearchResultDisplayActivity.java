@@ -28,6 +28,7 @@ import com.android.jesse.biliparser.utils.LogUtils;
 import com.android.jesse.biliparser.utils.NetLoadListener;
 import com.android.jesse.biliparser.utils.ParseUtils;
 import com.android.jesse.biliparser.utils.Session;
+import com.android.jesse.biliparser.utils.SharePreferenceUtil;
 import com.android.jesse.biliparser.utils.Utils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -137,6 +138,9 @@ public class SearchResultDisplayActivity extends SimpleActivity {
                 loadMore();
             }
         });
+        if(SharePreferenceUtil.getInt(Constant.SPKEY_ENTER_APP_COUNT) <= 1){
+            ToastUtil.show(R.string.hint_longclick_expand_desc);
+        }
     }
 
     //加载更多

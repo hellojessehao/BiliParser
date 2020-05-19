@@ -19,6 +19,7 @@
         android:scaleType="fitXY"
         app:roundRadius="8"
         app:type="1"
+        android:maxHeight="150dp"
         />
 
     <LinearLayout
